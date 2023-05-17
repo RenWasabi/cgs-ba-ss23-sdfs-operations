@@ -96,7 +96,7 @@ for i in range(vertice_grid_shape[0]):
 
 
 
-test_square_grid = ms.MS_Grid(vertice_grid, 0, batman_equation)
+test_square_grid = ms.MS_Grid(vertice_grid, 0, unit_circle_equation)
 print("isovalue: " , test_square_grid.isovalue)
 print(test_square_grid.get_vertice_upper_left(0,0))
 # stores the positions considered to be on the zero isocontour
@@ -130,10 +130,15 @@ test_square_grid.march()
 test_square_grid.get_square_infos()
 test_square_grid.flatten_infos()
 test_points = test_square_grid.cut_vertice_list
+test_edges = test_square_grid.cut_edge_list
 #test_points = test_square_grid.isoline_info()
 
 
-ps.register_curve_network("test", test_points, np.asarray([[0,0]]))
+#ps.register_curve_network("test", test_points, np.asarray([[0,0]]))
+
+
+ps.register_curve_network("test", test_points, test_edges)
+
 # vertices are the points considered to be on the zero isocontour
 #ps.register_curve_network("my_circle", np.asarray(isocontour_positions), circle_edges)
 #print(grid)

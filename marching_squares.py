@@ -14,6 +14,7 @@ class MS_Grid:
         self.function = function
         # flattened infos
         self.cut_vertice_list = np.zeros(1)
+        self.cut_edge_list = np.zeros(1)
 
 
     def get_square_infos(self):
@@ -100,7 +101,7 @@ class MS_Grid:
         # get all four vertices in the beginning for better readibility
         a = self.get_vertice_upper_left(square_index_x, square_index_y)
         b = self.get_vertice_upper_right(square_index_x, square_index_y)
-        c = self.get_vertice_upper_right(square_index_x, square_index_y)
+        c = self.get_vertice_lower_right(square_index_x, square_index_y)
         d = self.get_vertice_lower_left(square_index_x, square_index_y)
         
         # one 0 three 1 or one 1 and three 0 -> one diagonal cut
@@ -171,6 +172,7 @@ class MS_Grid:
         cut_vertice_list = []
         cut_edge_list = []
 
+        vertice_index = -1 # necessary so that adding the first vertice at index 0 will result in 0
         for i in range(self.shape[0]):
             for j in range(self.shape[1]):
                 if (self.square_infos[i][j].intersection_points is not None):
@@ -181,8 +183,20 @@ class MS_Grid:
                         # set the z coordinate (currently storing value) to isoline value (usually zero)
                         isoline_vertice = np.asarray([isoline_vertice[0], isoline_vertice[1], self.isovalue])
                         cut_vertice_list.append(isoline_vertice)
+                        vertice_index += 1
+
+                        # uneven index -> 2 new vertices -> 1 new edge (add edge between last two vertices)
+                        if (vertice_index % 2 == 1):
+                            cut_edge_list.append(np.asarray([vertice_index-1, vertice_index]))
+                    
+        
+                    
                       
         self.cut_vertice_list = np.asarray(cut_vertice_list)
+
+        self.cut_edge_list = np.asarray(cut_edge_list)
+
+
         
 
         #print(cut_edge_list)
