@@ -1,6 +1,6 @@
 import polyscope as ps
 import numpy as np
-import polyscope as ps
+
 
 class MS_Grid:
     # x squares, y squares, 3 (position x y , value)
@@ -16,27 +16,25 @@ class MS_Grid:
         self.cut_vertice_list = np.zeros(1)
         self.cut_edge_list = np.zeros(1)
 
+    def full_run(self):
+        self.evaluate_function()
+        self.march()
+        self.flatten_infos()
+        return self.cut_vertice_list, self.cut_edge_list
 
-    def get_square_infos(self):
-        print(self.square_infos)
 
-
-    """
-    one square should store:
-     -  all necessary intersection points on its edges (determined LERP)
-     - pair/pairs of indices for which of these points are connected by an outline
-    """
-
+    # sets the third coordinate of the vertice array to the function value at the corresponding coordinate
     def evaluate_function(self):
         for i in range(self.vertices.shape[0]):
             for j in range(self.vertices.shape[1]):
                 # value at i, j      = function evaluated at x, y coordinates belonging to i,j
                 self.vertices[i,j,2] = self.function(self.vertices[i,j,0], self.vertices[i,j,1])
 
+
     # functions for retrieving the four vertices of a specified square
     def get_vertice_upper_left(self, square_index_x: int, square_index_y: int):
         return self.vertices[square_index_x, square_index_y]
-    
+
     def get_vertice_upper_right(self, square_index_x: int, square_index_y: int):
         return self.vertices[square_index_x+1, square_index_y]
     
@@ -87,7 +85,7 @@ class MS_Grid:
         #print("square[" , square_index_x, "][", square_index_y, "] has type:" , square_type)
 
     
-    # 
+    # calculates the correct square info (where to cut) for a single square
     def cut_square(self, square_index_x: int, square_index_y: int):
         square_type = self.square_type(square_index_x, square_index_y)  
         square_info = Square_Info()
@@ -144,7 +142,7 @@ class MS_Grid:
             square_info.intersection = np.asarray([0,1])
         # two diagonal cuts
         # unclear situation, needs extra handling
-
+        # todo
 
         self.square_infos[square_index_x][square_index_y] = square_info
 
@@ -189,11 +187,7 @@ class MS_Grid:
                         if (vertice_index % 2 == 1):
                             cut_edge_list.append(np.asarray([vertice_index-1, vertice_index]))
                     
-        
-                    
-                      
         self.cut_vertice_list = np.asarray(cut_vertice_list)
-
         self.cut_edge_list = np.asarray(cut_edge_list)
 
 
@@ -204,8 +198,7 @@ class MS_Grid:
         
         
 class Square_Info:
-    #def __init__(self):
-        # the points on the edges of the square that are intersected by the isocurve
+    # the points on the edges of the square that are intersected by the isocurve
     intersection_points = None # numpy array of [[x_0, y_0] ...]
     intersection = np.zeros(1)   # numpy array, indices of the intersection vertices to be connected by an edge
     
@@ -217,18 +210,5 @@ class Square_Info:
 
 
 
-
-# def outsourced_function(x: int, y:int, method_to_run):
-#     return method_to_run(x,y)
-
-
-# def marching_squares(vertice_grid: np.ndarray, isovalue: float, function):
-
-
-#     square_grid_shape = (vertice_grid.shape[0]-1, vertice_grid.shape[1]-1)
-#     square_grid = np.ndarray(square_grid_shape)
-
-#     for i in range(square_grid_shape[0]):
-#         for j in range(square_grid_shape[1]):
 
     
