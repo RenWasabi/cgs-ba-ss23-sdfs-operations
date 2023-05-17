@@ -177,8 +177,11 @@ class MS_Grid:
                     # this one is important because sometimes there is one cut, sometimes two cuts
                     number_of_vertices = self.square_infos[i][j].intersection_points.shape[0]
                     for vertice in range(number_of_vertices):
-                        cut_vertice_list.append(self.square_infos[i][j].intersection_points[vertice])
-
+                        isoline_vertice = self.square_infos[i][j].intersection_points[vertice]
+                        # set the z coordinate (currently storing value) to isoline value (usually zero)
+                        isoline_vertice = np.asarray([isoline_vertice[0], isoline_vertice[1], self.isovalue])
+                        cut_vertice_list.append(isoline_vertice)
+                      
         self.cut_vertice_list = np.asarray(cut_vertice_list)
         
 
