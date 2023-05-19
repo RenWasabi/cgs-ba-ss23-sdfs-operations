@@ -1,10 +1,51 @@
 import numpy as np
 
+# some semi-implicit functions:
+# still written explicitly, but so that the expected 
+# return value for the function would need to be 0
+# to match the implicit function
+
+
 # result = 0 -> x, y is a point on the unit circle
 def unit_circle(x: float, y: float):
     return x**2 + y**2 - 1
 
+def shifted_unit_circle(x:float, y: float):
+    shift_amount_right = 0.75
+    return (x-shift_amount_right)**2 + y**2 - 1
+
+
+
+
 def batman(x: float, y: float): 
     factor1 = (x/7)**2 * np.sqrt((np.abs(np.abs(x)-3)) / (np.abs(x)-3)) + (y/3)**2 * np.sqrt(  (np.abs(y + 3*np.sqrt(33)/7)/ (y + 3* np.sqrt(33)/7)))-1
     factor2 = np.abs(x/2) - (3*np.sqrt(33) - 7)/122 * x**2 - 3 + np.sqrt((1- np.abs(np.abs(x)-2)-1)**2)-y
+    # still missing terms
     return factor1*factor2
+
+
+
+# Boolean operations
+
+# min -> A union B (two functions)
+def union(function_a, function_b):
+    min = lambda x,y: np.amin([function_a(x,y), function_b(x,y)])
+    return min
+
+# max -> A intersection B (two functions)
+def intersection(function_a, function_b):
+    max = lambda x,y: np.amax([function_a(x,y), function_b(x,y)])
+    return max
+
+
+# flip -> A complement (one function)
+def complement(function_a):
+    flipped = lambda x, y: -function_a(x, y)
+    return flipped
+
+# max(A, flip(B)) -> A\B (subtract B from A)
+def subtract(function_a, function_b):
+    subtract = lambda x, y: np.amax([function_a(x,y), complement(function_b)(x, y)])
+    return subtract
+
+
