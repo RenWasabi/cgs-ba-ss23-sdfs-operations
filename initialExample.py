@@ -7,10 +7,14 @@ import marching_squares as ms
 # todo
 # - implement linear interpolation for the marching squares cut
 # - implement the marching squares situation in which there is two cuts in one square
+# - improve marching squares performance
 #
 # - implement smooth version of math functions for Boolean operations (+ research)
 # - fully implement batman function
 # - for parametric functions (e.g. shifted unit circle): somehow pass parameters in calling script
+# - currently I'm just using any implicit functions -> use signed distance functions
+#
+# - use vectors for x y coordinates
 
 # some options
 ps.set_program_name("initial polyscope test")
@@ -65,28 +69,12 @@ for i in range(vertice_grid_shape[0]):
 # use marching squares on a function
 #test_square_grid = ms.MS_Grid(vertice_grid, 0, functions.unit_circle)
 
-"""
-# unit circle
-squares_unit_circle = ms.MS_Grid(vertice_grid, 0, functions.unit_circle)
-unit_circle_points, unit_circle_edges = squares_unit_circle.full_run()
-ps.register_curve_network("unit_circle", unit_circle_points, unit_circle_edges)
 
 
-# shifted unit circle
-squares_shifted_circle = ms.MS_Grid(vertice_grid, 0, functions.shifted_unit_circle)
-shifted_circle_points, shifted_circle_edges = squares_shifted_circle.full_run()
-ps.register_curve_network("shifted_circle", shifted_circle_points, shifted_circle_edges)
-"""
+unit_circle = functions.circle_function(0,0,1)
+shifted_unit_circle = functions.circle_function(0.75, 0, 1.25)
+squares_circles_subtract = ms.MS_Grid(vertice_grid, 0, functions.subtract(unit_circle, shifted_unit_circle))
 
-#squares_circles_union = ms.MS_Grid(vertice_grid, 0, functions.union(functions.unit_circle, functions.shifted_unit_circle))
-#circles_union_points, circles_union_edges = squares_circles_union.full_run()
-#ps.register_curve_network("circles_union", circles_union_points, circles_union_edges)
-
-#squares_circles_intersection = ms.MS_Grid(vertice_grid, 0, functions.intersection(functions.unit_circle, functions.shifted_unit_circle))
-#circles_intersection_points, circles_intersection_edges = squares_circles_intersection.full_run()
-#ps.register_curve_network("circles_intersection", circles_intersection_points, circles_intersection_edges)
-
-squares_circles_subtract = ms.MS_Grid(vertice_grid, 0, functions.subtract(functions.unit_circle, functions.shifted_unit_circle))
 circles_subtract_points, circles_subtract_edges = squares_circles_subtract.full_run()
 ps.register_curve_network("circles_subtract", circles_subtract_points, circles_subtract_edges)
 

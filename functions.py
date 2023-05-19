@@ -6,14 +6,11 @@ import numpy as np
 # to match the implicit function
 
 
-# result = 0 -> x, y is a point on the unit circle
-def unit_circle(x: float, y: float):
-    return x**2 + y**2 - 1
-
-def shifted_unit_circle(x:float, y: float):
-    shift_amount_right = 0.75
-    return (x-shift_amount_right)**2 + y**2 - 1
-
+# result = 0 -> x, y is a point on the specified circle
+# returns a function that is 0 at the
+def circle_function(center_x: float, center_y: float, radius: float):
+    circle = lambda x, y: (x - center_x)**2 + (y - center_y)**2 - radius**2
+    return circle
 
 
 
