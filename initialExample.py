@@ -128,10 +128,15 @@ number_y_edges = (mesh_grid_x-1)*mesh_grid_y
 number_diag_edges = (mesh_grid_x-1)*(mesh_grid_y-1)
 number_total_edges = number_x_edges + number_y_edges + number_diag_edges
 
+number_of_faces = (mesh_grid_x-1)*(mesh_grid_y-1)*2
+
 value_mesh_points = np.ndarray((mesh_grid_x*mesh_grid_y, 3)) # flat array of 3D mesh points
 
 value_mesh_edges = np.ndarray((number_total_edges, 2)) # flat array of edges (as length 2 array)
 
+value_mesh_faces = np.ndarray((number_of_faces, 3)) # flat array of triangle (3 edges) faces
+
+face_vertice_counter = 0
 for i in range(mesh_grid_x): 
     for j in range(mesh_grid_y):
         # the points
@@ -140,11 +145,49 @@ for i in range(mesh_grid_x):
         # the edges
         # x direction edges 
         if (j < mesh_grid_y-1):
-            value_mesh_edges[i*(mesh_grid_y-1)+j, :] = np.asarray([i*mesh_grid_y+j, i*mesh_grid_y+j+1])
+            x_edge_index = i*(mesh_grid_y-1)+j
+            value_mesh_edges[x_edge_index, :] = np.asarray([i*mesh_grid_y+j, i*mesh_grid_y+j+1])
+
+
+
+            #value_mesh_faces[face_vertice_counter] = value_mesh_points[np.int64(value_mesh_edges[x_edge_index,0])]
+            #face_vertice_counter += 1
+            #value_mesh_faces[3*i+2] = value_mesh_points[np.int64(value_mesh_edges[x_edge_index,0])]
+            #value_mesh_faces[3*(i+(number_diag_edges//2))+2] = value_mesh_points[np.int64(value_mesh_edges[x_edge_index,1])]
+
+
+            # add edge to one or two faces
+            #if (i % mesh_grid_y != 0): # x is left border -> dont add to nonexistent face left to it
+                #value_mesh_faces[i] = value_mesh_points[np.int64(value_mesh_edges[x_edge_index,0])]
+                #value_mesh_faces[i, 2] = np.int64(value_mesh_edges[x_edge_index,1])
+            #if (i % (mesh_grid_y-1) != 0): # x is right border -> dont add to nonexistent face right to it
+                #value_mesh_faces[(number_of_faces//2+i)*3] = value_mesh_points[np.int64(value_mesh_edges[x_edge_index,0])]
+                #value_mesh_faces[i, 2 ] = np.int64(value_mesh_edges[x_edge_index,0])
+
+            value_mesh_faces[i, 2] = np.int64(value_mesh_edges[x_edge_index,1])
+
+            value_mesh_faces[i+number_of_faces//2-1, 2] = np.int64(value_mesh_edges[x_edge_index,0])
+
+
+
+
 
         # the y direction edges
         if (i < mesh_grid_x and (j != 0 or i==0) and i*(mesh_grid_y-1)+j+number_x_edges != number_x_edges+number_y_edges):
-            value_mesh_edges[i*(mesh_grid_y-1)+j+number_x_edges, :] = np.asarray([i*(mesh_grid_y-1)+j, (i+1)*mesh_grid_y+j-i])
+            y_edge_index = i*(mesh_grid_y-1)+j+number_x_edges
+            value_mesh_edges[y_edge_index, :] = np.asarray([i*(mesh_grid_y-1)+j, (i+1)*mesh_grid_y+j-i])
+
+            #if (i not in range(mesh_grid_y-1)): # y is upper border -> don't add to nonexistent face above it
+                #value_mesh_faces[3*(i-1)+1] = value_mesh_points[np.int64(value_mesh_edges[y_edge_index,0])]
+      
+            #if (i < number_of_faces/2 - mesh_grid_y-1 or i > number_of_faces/2 -1): # not low border
+                #value_mesh_faces[3*(number_of_faces//2+i)+1] = value_mesh_points[np.int64(value_mesh_edges[y_edge_index,0])]
+        
+        
+            #value_mesh_faces[i,1] = np.int64(value_mesh_edges[y_edge_index,0])
+
+
+
 
 
 
@@ -153,47 +196,41 @@ for i in range(mesh_grid_x):
         if (i >= mesh_grid_x-1 or j >= mesh_grid_y-1):
             continue
         else:
-            print("i:", i, "j:", j)
-            print("value_mesh_edges[",i*(mesh_grid_y-1)+j+number_x_edges+number_y_edges, "] = ",i*mesh_grid_y+j, (i+1)*mesh_grid_y+j+1) 
-            value_mesh_edges[i*(mesh_grid_y-1)+j+number_x_edges+number_y_edges,:] = np.asarray([i*mesh_grid_y+j, (i+1)*mesh_grid_y+j+1])
+            diag_edge_index = i*(mesh_grid_y-1)+j+number_x_edges+number_y_edges
+            value_mesh_edges[diag_edge_index,:] = np.asarray([i*mesh_grid_y+j, (i+1)*mesh_grid_y+j+1])
+
+            #value_mesh_faces[i,2] = np.int64(value_mesh_edges[diag_edge_index,0])
+
+            
+            # always add these inner edges
+            value_mesh_faces[i, 0] = np.int64(value_mesh_edges[diag_edge_index,0])
+            value_mesh_faces[i, 1] = np.int64(value_mesh_edges[diag_edge_index,1])
+
+            value_mesh_faces[i+number_of_faces//2, 0] = np.int64(value_mesh_edges[diag_edge_index,0])
+            value_mesh_faces[i+number_of_faces//2, 1] = np.int64(value_mesh_edges[diag_edge_index,1])
+         
+
+
+
                 
 
+        
+
 ps.register_curve_network("my_future_mesh", value_mesh_points, value_mesh_edges)  
+ps.register_surface_mesh("my_value_mesh", value_mesh_points, value_mesh_faces)
+
 
 #np.set_printoptions(threshold=sys.maxsize)
-print(value_mesh_edges)
+#print(value_mesh_edges)
 print("total points: ", number_mesh_points)
 print("total edges", number_total_edges)
 print("x, ", number_x_edges)
 print("y", number_y_edges)
 print("diag" , number_diag_edges)
-print(value_mesh_edges[0])
-print(value_mesh_edges[1])
-print(value_mesh_edges[number_x_edges-1])
-print("oben: x, unten: y")
-print(value_mesh_edges[number_x_edges])
-print(value_mesh_edges[number_x_edges+number_y_edges-15])
-print("ab hier")
-print(value_mesh_edges[number_x_edges+number_y_edges-14])
-print(value_mesh_edges[number_x_edges+number_y_edges-1])
-print("oben: y, unten: diag")
-print(value_mesh_edges[number_x_edges+number_y_edges])
-print(value_mesh_edges[number_x_edges+number_y_edges+1])
-print(value_mesh_edges[number_x_edges+number_y_edges+2])
-print(value_mesh_edges[number_x_edges+number_y_edges+14])
-print(value_mesh_edges[number_x_edges+number_y_edges+15])
-print(value_mesh_edges[number_total_edges-15])
-print(value_mesh_edges[number_total_edges-16])
-print(value_mesh_edges[number_total_edges-17]) 
-print(value_mesh_edges[number_total_edges-20])
-print("bis hier ok")
-print(value_mesh_edges[number_total_edges-1])
-print(value_mesh_edges[number_total_edges-2])
-print(value_mesh_edges[number_total_edges-3])
-print(value_mesh_edges[number_total_edges-10])
-print(value_mesh_edges[number_total_edges-14])
 print("mesh x", mesh_grid_x)
 print("mesh_y", mesh_grid_y)
+print("resolution step of mesh: ", resolution_step)
+print(value_mesh_faces)
 
 
 """
