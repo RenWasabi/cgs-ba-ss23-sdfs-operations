@@ -12,11 +12,10 @@ import sys # for printing max
 #
 # - implement smooth version of math functions for Boolean operations (+ research)
 # - fully implement batman function
-# - for parametric functions (e.g. shifted unit circle): somehow pass parameters in calling script
 # - currently I'm just using any implicit functions -> use signed distance functions
 #
 # - visualize SDF (function/distance) values
-# - make actual mesh
+# - mesh coloring with LERP
 # - use vectors for x y coordinates
 #
 # project isonlines to bottom plane instead of current one
@@ -117,7 +116,7 @@ value_net.add_color_quantity("my_value_colors", value_vectors_edge_colors, defin
 
 # visualizing functions values on z axis
 # smaller steps -> more precision (less than 1 doesn't make sense, for that, the evaluation grid should be adjusted)
-resolution_step = 10 
+resolution_step = 1
 mesh_grid_x = np.int64(np.ceil(vertice_grid.shape[0]/resolution_step))
 mesh_grid_y = np.int64(np.ceil(vertice_grid.shape[1]/resolution_step))
 
@@ -174,17 +173,41 @@ for i in range(mesh_grid_x):
             # right half
             value_mesh_faces[i*(mesh_grid_y-1)+j+number_of_faces//2, 0] = np.int64(value_mesh_edges[diag_edge_index,0])
             value_mesh_faces[i*(mesh_grid_y-1)+j+number_of_faces//2, 1] = np.int64(value_mesh_edges[diag_edge_index,1])
-            
+
+
+#value_curve_network = ps.register_curve_network("my_future_mesh", value_mesh_points, value_mesh_edges)  
+value_mesh = ps.register_surface_mesh("my_value_mesh", value_mesh_points, value_mesh_faces)      
          
+# coloring the mesh
+# majority of point values determines color
+# ideally with LERP
+value_mesh_colors = np.ndarray((number_of_faces,3))
+blue = np.asarray([0,0,1])
+red = np.asarray([1,0,0])
+for face in range (number_of_faces):
+    positive_vertices = 0
+    for vertice in range(3):
+        this_vertice = value_mesh_faces[face,vertice]
+        this_value = value_mesh_points[np.int64(this_vertice),2]
+        if this_value > 0:
+            positive_vertices += 1
+    if positive_vertices >= 2:
+        # color face red
+        value_mesh_colors[face] = red
+    else:
+        # color face blue
+        value_mesh_colors[face] = blue
+value_mesh.add_color_quantity("value_mesh_colors", value_mesh_colors, defined_on='faces', enabled=True)
+    
 
 
 
+#value_mesh_points[i*mesh_grid_y+j,:] = vertice_grid[i*resolution_step, j*resolution_step, :]
                 
 
         
 
-#ps.register_curve_network("my_future_mesh", value_mesh_points, value_mesh_edges)  
-ps.register_surface_mesh("my_value_mesh", value_mesh_points, value_mesh_faces)
+
 
 print("total points: ", number_mesh_points)
 print("total edges", number_total_edges)
@@ -194,14 +217,15 @@ print("diag" , number_diag_edges)
 print("mesh x", mesh_grid_x)
 print("mesh_y", mesh_grid_y)
 print("resolution step of mesh: ", resolution_step)
+print("number of mesh faces", number_of_faces)
 print("-"*50)
 
 
 
 
-
 """
-# coloring the curve network based on whether the value is positive or negative
+
+# coloring points based on whether the value is positive or negative
 for i in range(0,vertice_grid_shape[0],25):
     for j in range(0,vertice_grid_shape[1], 25):
         # vertice_grid[i,j,2] = 100 should have the correct value still from ms squares
@@ -222,7 +246,7 @@ value_vectors_edges = np.asarray(value_vectors_edges)
 value_vectors_edge_colors = np.asarray(value_vectors_edge_colors)
 value_net = ps.register_curve_network("my_value_vectors", value_vectors_points, value_vectors_edges, transparency=0.3)
 value_net.add_color_quantity("my_value_colors", value_vectors_edge_colors, defined_on="edges", enabled=True)
-        
-"""
+        """
+
 
 ps.show()
