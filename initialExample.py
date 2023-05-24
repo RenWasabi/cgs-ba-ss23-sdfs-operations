@@ -116,8 +116,8 @@ value_net.add_color_quantity("my_value_colors", value_vectors_edge_colors, defin
 """
 
 # visualizing functions values on z axis
-#value_vectors = np.ndarray((vertice_grid.shape[0]*vertice_grid.shape[1], 3))
-resolution_step = 25
+# smaller steps -> more precision (less than 1 doesn't make sense, for that, the evaluation grid should be adjusted)
+resolution_step = 10 
 mesh_grid_x = np.int64(np.ceil(vertice_grid.shape[0]/resolution_step))
 mesh_grid_y = np.int64(np.ceil(vertice_grid.shape[1]/resolution_step))
 
@@ -134,7 +134,7 @@ value_mesh_points = np.ndarray((mesh_grid_x*mesh_grid_y, 3)) # flat array of 3D 
 
 value_mesh_edges = np.ndarray((number_total_edges, 2)) # flat array of edges (as length 2 array)
 
-value_mesh_faces = np.ndarray((3*number_of_faces, 3)) # flat array of triangle (3 edges) faces
+value_mesh_faces = np.ndarray((number_of_faces, 3)) # flat array of triangle (3 edges) faces
 
 face_vertice_counter = 0
 for i in range(mesh_grid_x): 
@@ -142,66 +142,23 @@ for i in range(mesh_grid_x):
         # the points
         value_mesh_points[i*mesh_grid_y+j,:] = vertice_grid[i*resolution_step, j*resolution_step, :]
 
-        # the edges
-        # x direction edges 
+        # the edges and faces
+        # face calculation is based on edges, one faces consists of the two edges of the diagonal and one x edge
+        # may God have mercy on me for this index calculation
+
+        # x direction edges for curves 
         if (j < mesh_grid_y-1):
             x_edge_index = i*(mesh_grid_y-1)+j
             value_mesh_edges[x_edge_index, :] = np.asarray([i*mesh_grid_y+j, i*mesh_grid_y+j+1])
-
-
-
-            #value_mesh_faces[face_vertice_counter] = value_mesh_points[np.int64(value_mesh_edges[x_edge_index,0])]
-            #face_vertice_counter += 1
-            #value_mesh_faces[3*i+2] = value_mesh_points[np.int64(value_mesh_edges[x_edge_index,0])]
-            #value_mesh_faces[3*(i+(number_diag_edges//2))+2] = value_mesh_points[np.int64(value_mesh_edges[x_edge_index,1])]
-
-
-            # add edge to one or two faces
-            #if (i % mesh_grid_y != 0): # x is left border -> dont add to nonexistent face left to it
-                #value_mesh_faces[i] = value_mesh_points[np.int64(value_mesh_edges[x_edge_index,0])]
-                #value_mesh_faces[i, 2] = np.int64(value_mesh_edges[x_edge_index,1])
-            #if (i % (mesh_grid_y-1) != 0): # x is right border -> dont add to nonexistent face right to it
-                #value_mesh_faces[(number_of_faces//2+i)*3] = value_mesh_points[np.int64(value_mesh_edges[x_edge_index,0])]
-                #value_mesh_faces[i, 2 ] = np.int64(value_mesh_edges[x_edge_index,0])
-
-            #value_mesh_faces[i, 2] = np.int64(value_mesh_edges[x_edge_index,1])
-            #definitely
-
+            # the x point for mesh faces 
             if (i < mesh_grid_x-1):
                 value_mesh_faces[i*(mesh_grid_y-1)+j, 2] = np.int64(value_mesh_edges[x_edge_index,1])
                 value_mesh_faces[i*(mesh_grid_y-1)+j+number_of_faces//2, 2] = np.int64(value_mesh_edges[x_edge_index,0]+mesh_grid_x)
-
-            #value_mesh_faces[(i-1)*(mesh_grid_y-1)+j, 2] = np.int64(value_mesh_edges[x_edge_index,0])
-            #value_mesh_faces[(i-3)*(mesh_grid_y-1)+j+number_of_faces//2, 2] = np.int64(value_mesh_edges[x_edge_index,0])
-
-
-
-
-
 
         # the y direction edges
         if (i < mesh_grid_x and (j != 0 or i==0) and i*(mesh_grid_y-1)+j+number_x_edges != number_x_edges+number_y_edges):
             y_edge_index = i*(mesh_grid_y-1)+j+number_x_edges
             value_mesh_edges[y_edge_index, :] = np.asarray([i*(mesh_grid_y-1)+j, (i+1)*mesh_grid_y+j-i])
-
-            #value_mesh_faces[i*(mesh_grid_y-1)+j+number_of_faces//2, 2] = np.int64(value_mesh_edges[y_edge_index,0])
-            #value_mesh_faces[j*(mesh_grid_x-1)+i+number_of_faces//2, 2] = np.int64(value_mesh_edges[y_edge_index,0])
-            
-
-            #if (i not in range(mesh_grid_y-1)): # y is upper border -> don't add to nonexistent face above it
-                #value_mesh_faces[3*(i-1)+1] = value_mesh_points[np.int64(value_mesh_edges[y_edge_index,0])]
-      
-            #if (i < number_of_faces/2 - mesh_grid_y-1 or i > number_of_faces/2 -1): # not low border
-                #value_mesh_faces[3*(number_of_faces//2+i)+1] = value_mesh_points[np.int64(value_mesh_edges[y_edge_index,0])]
-        
-        
-            #value_mesh_faces[i,1] = np.int64(value_mesh_edges[y_edge_index,0])
-
-
-
-
-
-
 
         # the diagonal edges
         if (i >= mesh_grid_x-1 or j >= mesh_grid_y-1):
@@ -210,25 +167,12 @@ for i in range(mesh_grid_x):
             diag_edge_index = i*(mesh_grid_y-1)+j+number_x_edges+number_y_edges
             value_mesh_edges[diag_edge_index,:] = np.asarray([i*mesh_grid_y+j, (i+1)*mesh_grid_y+j+1])
 
-            #value_mesh_faces[i,2] = np.int64(value_mesh_edges[diag_edge_index,0])
-
-            
-            # always add these inner edges
-            #value_mesh_faces[i, 0] = np.int64(value_mesh_edges[diag_edge_index,0])
-            #value_mesh_faces[i, 1] = np.int64(value_mesh_edges[diag_edge_index,1])
-            # definitely
+            # diagonal points for mesh faces
+            # first half (left half of square)
             value_mesh_faces[i*(mesh_grid_y-1)+j, 0] = np.int64(value_mesh_edges[diag_edge_index,0])
             value_mesh_faces[i*(mesh_grid_y-1)+j, 1] = np.int64(value_mesh_edges[diag_edge_index,1])
-
-
-
-            #value_mesh_faces[i+number_of_faces//2, 0] = np.int64(value_mesh_edges[diag_edge_index,0])
-            #value_mesh_faces[i+number_of_faces//2, 1] = np.int64(value_mesh_edges[diag_edge_index,1])
-            
-            # this line seems correct
+            # right half
             value_mesh_faces[i*(mesh_grid_y-1)+j+number_of_faces//2, 0] = np.int64(value_mesh_edges[diag_edge_index,0])
-
-            # this one too
             value_mesh_faces[i*(mesh_grid_y-1)+j+number_of_faces//2, 1] = np.int64(value_mesh_edges[diag_edge_index,1])
             
          
@@ -242,9 +186,6 @@ for i in range(mesh_grid_x):
 #ps.register_curve_network("my_future_mesh", value_mesh_points, value_mesh_edges)  
 ps.register_surface_mesh("my_value_mesh", value_mesh_points, value_mesh_faces)
 
-
-#np.set_printoptions(threshold=sys.maxsize)
-#print(value_mesh_edges)
 print("total points: ", number_mesh_points)
 print("total edges", number_total_edges)
 print("x, ", number_x_edges)
@@ -254,27 +195,13 @@ print("mesh x", mesh_grid_x)
 print("mesh_y", mesh_grid_y)
 print("resolution step of mesh: ", resolution_step)
 print("-"*50)
-print("value mesh faces: second half")
-print(value_mesh_faces[number_of_faces//2])
-print(value_mesh_faces[number_of_faces//2+1])
-print(value_mesh_faces[number_of_faces//2+2])
-print(value_mesh_faces[number_of_faces//2+14])
-print(value_mesh_faces[number_of_faces//2+15])
-print(value_mesh_faces[number_of_faces//2+16])
 
-
-print(value_mesh_faces[number_of_faces//2+number_of_faces//4-70])
-print(value_mesh_faces[number_of_faces//2+number_of_faces//4-50])
-print(value_mesh_faces[number_of_faces//2+number_of_faces//4-10])
-print(value_mesh_faces[number_of_faces//2+number_of_faces//4])
-print(value_mesh_faces[number_of_faces-3])
-print(value_mesh_faces[number_of_faces-2])
-print(value_mesh_faces[number_of_faces-1])
 
 
 
 
 """
+# coloring the curve network based on whether the value is positive or negative
 for i in range(0,vertice_grid_shape[0],25):
     for j in range(0,vertice_grid_shape[1], 25):
         # vertice_grid[i,j,2] = 100 should have the correct value still from ms squares
