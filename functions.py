@@ -12,6 +12,18 @@ def circle_function(center_x: float, center_y: float, radius: float):
     circle = lambda x, y: (x - center_x)**2 + (y - center_y)**2 - radius**2
     return circle
 
+def circle_SDF(center_x: float, center_y: float, radius: float):
+    circle = lambda x, y: np.sqrt((x - center_x)**2 + (y - center_y)**2)-radius
+    return circle
+
+def rectangle_function(center_x: float, center_y: float, length: float, height: float):
+    # mid should be -, but somehow + seems to produce the expected result
+    #rectangle = lambda x,y: np.linalg.norm(np.maximum(np.abs(np.asarray([x,y]))-np.asarray([length, height]), np.asarray([0,0]))) - np.amin(np.max(np.abs(np.asarray([x,y])) - np.asarray([length, height])),0)
+    rectangle = lambda x,y: np.linalg.norm(np.maximum(np.abs(np.asarray([x,y]))-np.asarray([length, height]), np.asarray([0,0]))) + np.amin(np.max(np.abs(np.asarray([x,y])) - np.asarray([length, height])),0)
+    
+    return rectangle
+
+
 
 
 def batman(x: float, y: float): 

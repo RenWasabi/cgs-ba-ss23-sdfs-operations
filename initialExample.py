@@ -79,10 +79,29 @@ for i in range(vertice_grid_shape[0]):
 
 unit_circle = functions.circle_function(0,0,1)
 shifted_unit_circle = functions.circle_function(0, 0.7, 1.25)
-squares_circles_subtract = ms.MS_Grid(vertice_grid, 0, functions.subtract(unit_circle, shifted_unit_circle))
+#squares_circles_subtract = ms.MS_Grid(vertice_grid, 0, functions.subtract(unit_circle, shifted_unit_circle))
 
-circles_subtract_points, circles_subtract_edges = squares_circles_subtract.full_run()
-shape_substract = ps.register_curve_network("circles_subtract", circles_subtract_points, circles_subtract_edges)
+unit_circle_SDF = functions.circle_SDF(0,0,1)
+shifted_unit_circle_SDF = functions.circle_SDF(0, 0.7, 1.25)
+#squares_circles_subtract = ms.MS_Grid(vertice_grid, 0, functions.subtract(unit_circle_SDF, shifted_unit_circle_SDF))
+#squares_circles_union = ms.MS_Grid(vertice_grid, 0, functions.union(unit_circle_SDF, shifted_unit_circle_SDF))
+squares_circles_intersection = ms.MS_Grid(vertice_grid, 0, functions.intersection(unit_circle_SDF, shifted_unit_circle_SDF))
+
+
+
+
+
+#shape_points, shape_edges = squares_circles_intersection.full_run()
+#shape_points, shape_edges = squares_circles_subtract.full_run()
+#shape_points, shape_edges = squares_circles_union.full_run()
+#shape = ps.register_curve_network("circles_subtract", shape_points, shape_edges)
+
+rectangle = functions.rectangle_function(0,0,1,1)
+#squares_rectangle = ms.MS_Grid(vertice_grid,0,rectangle)
+squares_rectangle = ms.MS_Grid(vertice_grid,0,functions.subtract(rectangle, shifted_unit_circle_SDF))
+
+rectangle_points, rectangle_edges = squares_rectangle.full_run()
+shape_rectangle = ps.register_curve_network("rectangle", rectangle_points, rectangle_edges)
 
 """
 # visualizing functions values on z axis, as vectors
@@ -116,7 +135,7 @@ value_net.add_color_quantity("my_value_colors", value_vectors_edge_colors, defin
 
 # visualizing functions values on z axis
 # smaller steps -> more precision (less than 1 doesn't make sense, for that, the evaluation grid should be adjusted)
-resolution_step = 1
+resolution_step = 5
 mesh_grid_x = np.int64(np.ceil(vertice_grid.shape[0]/resolution_step))
 mesh_grid_y = np.int64(np.ceil(vertice_grid.shape[1]/resolution_step))
 
