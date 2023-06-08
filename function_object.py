@@ -65,4 +65,13 @@ class FOB:
         self.value_mesh_points, self.value_mesh_edges, self.value_mesh_faces = func_visual.function_visualization.create_value_points_edges_mesh(self.resolution_step, self.evaluation_grid)     
         self.value_mesh_colors = func_visual.function_visualization.create_mesh_colors(self.value_mesh_faces, self.value_mesh_points)
 
+        # create a colored mesh plane that is the value mesh, squashed to a flat plane at the height of isovalue
+        self.value_plane_points = np.ndarray(self.value_mesh_points.shape)
+        for i in range(self.value_plane_points.shape[0]):
+            self.value_plane_points[i] = self.value_mesh_points[i]
+            self.value_plane_points[i,2] = self.isovalue
+
+    
+
+
     
