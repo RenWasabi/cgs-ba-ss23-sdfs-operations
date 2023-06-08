@@ -81,13 +81,26 @@ function2difference_square = functions.subtract(square1, circle1)
 function2difference_circle = functions.subtract(circle1, square1)
 
 # the primitives
+# left primitive
 prim1_x = center_x2 - sidelength2
-prim1_y = center_y2 - sidelength2
+prim1_y = center_y2 + sidelength2
 square1prim = functions.rectangle_function(prim1_x-0.3, prim1_y+0, 1, 1)
 circle1prim = functions.circle_SDF(prim1_x+0.5, prim1_y+0.5,1)
 FOBfunction2prim1 = fob.FOB(circle1prim, isovalue2, prim1_x, prim1_y, sidelength2, resolution2, resolution_step2)
 name2prim1 = "function2prim1"
 helper.hlp.ps_register_and_list_whole_FOB(FOBfunction2prim1, name2prim1, example2_visuals)
+example2_primitives.append(example2_visuals[len(example2_visuals)-3])
+example2_primitives.append(example2_visuals[len(example2_visuals)-2])
+example2_primitives.append(example2_visuals[len(example2_visuals)-1])
+# right primitive
+prim2_x = center_x2 + sidelength2
+prim2_y = center_y2 + sidelength2
+square1prim = functions.rectangle_function(prim2_x-0.3, prim2_y+0, 1, 1)
+circle1prim2 = functions.circle_SDF(prim2_x+0.5, prim2_y+0.5,1)
+
+FOBfunction2prim2 = fob.FOB(circle1prim2, isovalue2, prim2_x, prim2_y, sidelength2, resolution2, resolution_step2)
+name2prim2 = "function2prim2"
+helper.hlp.ps_register_and_list_whole_FOB(FOBfunction2prim2, name2prim2, example2_visuals)
 example2_primitives.append(example2_visuals[len(example2_visuals)-3])
 example2_primitives.append(example2_visuals[len(example2_visuals)-2])
 example2_primitives.append(example2_visuals[len(example2_visuals)-1])
