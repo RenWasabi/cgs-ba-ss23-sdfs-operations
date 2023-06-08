@@ -2,6 +2,7 @@ import polyscope as ps
 import numpy as np
 import functions
 import marching_squares as ms
+import evaluation_grid as ev_grid
 import sys # for printing max
 
 
@@ -56,21 +57,8 @@ z_axis_curve = ps.register_curve_network("z_axis", z_axis_nodes, z_axis_edges)
 
 
 # create the grid to discretely evaluate the function on
-
-# specifies in which 2D domain input should be sampled
-x_range = np.arange(-2,2, 0.01)
-y_range = np.arange(-2,2, 0.01)
-
-# grid: [x_position, y_position, function_value]
-vertice_grid_shape = (x_range.size, y_range.size, 3)
-vertice_grid = np.ndarray(vertice_grid_shape)
-# set initial coordinates and values for the grid
-for i in range(vertice_grid_shape[0]):
-    for j in range(vertice_grid_shape[1]):
-        vertice_grid[i,j,0] = x_range[i] # set x coordinate
-        vertice_grid[i,j,1] = y_range[j] # set y coordinate
-        vertice_grid[i,j,2] = 100 # set initial value
-
+# format: [x_position, y_position, function_value]
+vertice_grid = ev_grid.evaluation_grid().create_vertice_grid(0,0,4,0.01)
 
 # use marching squares on a function
 #test_square_grid = ms.MS_Grid(vertice_grid, 0, functions.unit_circle)
@@ -96,7 +84,7 @@ squares_circles_intersection = ms.MS_Grid(vertice_grid, 0, functions.intersectio
 #shape_points, shape_edges = squares_circles_union.full_run()
 #shape = ps.register_curve_network("circles_subtract", shape_points, shape_edges)
 
-rectangle = functions.rectangle_function(0,0,1,1)
+rectangle = functions.rectangle_function(0,0,1.5,1)
 #squares_rectangle = ms.MS_Grid(vertice_grid,0,rectangle)
 squares_rectangle = ms.MS_Grid(vertice_grid,0,functions.subtract(rectangle, shifted_unit_circle_SDF))
 
@@ -132,6 +120,7 @@ value_vectors_edge_colors = np.asarray(value_vectors_edge_colors)
 value_net = ps.register_curve_network("my_value_vectors", value_vectors_points, value_vectors_edges, transparency=0.3)
 value_net.add_color_quantity("my_value_colors", value_vectors_edge_colors, defined_on="edges", enabled=True)
 """
+
 
 # visualizing functions values on z axis
 # smaller steps -> more precision (less than 1 doesn't make sense, for that, the evaluation grid should be adjusted)
@@ -193,7 +182,7 @@ for i in range(mesh_grid_x):
             value_mesh_faces[i*(mesh_grid_y-1)+j+number_of_faces//2, 0] = np.int64(value_mesh_edges[diag_edge_index,0])
             value_mesh_faces[i*(mesh_grid_y-1)+j+number_of_faces//2, 1] = np.int64(value_mesh_edges[diag_edge_index,1])
 
-
+            
 #value_curve_network = ps.register_curve_network("my_future_mesh", value_mesh_points, value_mesh_edges)  
 value_mesh = ps.register_surface_mesh("my_value_mesh", value_mesh_points, value_mesh_faces)      
          
