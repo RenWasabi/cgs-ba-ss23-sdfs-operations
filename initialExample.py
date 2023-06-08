@@ -3,6 +3,7 @@ import numpy as np
 import functions
 import marching_squares as ms
 import evaluation_grid as ev_grid
+import function_visualization as func_visual
 import sys # for printing max
 
 
@@ -60,10 +61,8 @@ z_axis_curve = ps.register_curve_network("z_axis", z_axis_nodes, z_axis_edges)
 # format: [x_position, y_position, function_value]
 vertice_grid = ev_grid.evaluation_grid().create_vertice_grid(0,0,4,0.01)
 
+
 # use marching squares on a function
-#test_square_grid = ms.MS_Grid(vertice_grid, 0, functions.unit_circle)
-
-
 
 unit_circle = functions.circle_function(0,0,1)
 shifted_unit_circle = functions.circle_function(0, 0.7, 1.25)
@@ -121,67 +120,8 @@ value_net = ps.register_curve_network("my_value_vectors", value_vectors_points, 
 value_net.add_color_quantity("my_value_colors", value_vectors_edge_colors, defined_on="edges", enabled=True)
 """
 
-
-# visualizing functions values on z axis
-# smaller steps -> more precision (less than 1 doesn't make sense, for that, the evaluation grid should be adjusted)
-resolution_step = 5
-mesh_grid_x = np.int64(np.ceil(vertice_grid.shape[0]/resolution_step))
-mesh_grid_y = np.int64(np.ceil(vertice_grid.shape[1]/resolution_step))
-
-number_mesh_points = mesh_grid_x*mesh_grid_y
-
-number_x_edges = mesh_grid_x*(mesh_grid_y-1)
-number_y_edges = (mesh_grid_x-1)*mesh_grid_y
-number_diag_edges = (mesh_grid_x-1)*(mesh_grid_y-1)
-number_total_edges = number_x_edges + number_y_edges + number_diag_edges
-
-number_of_faces = (mesh_grid_x-1)*(mesh_grid_y-1)*2
-
-value_mesh_points = np.ndarray((mesh_grid_x*mesh_grid_y, 3)) # flat array of 3D mesh points
-
-value_mesh_edges = np.ndarray((number_total_edges, 2)) # flat array of edges (as length 2 array)
-
-value_mesh_faces = np.ndarray((number_of_faces, 3)) # flat array of triangle (3 edges) faces
-
-face_vertice_counter = 0
-for i in range(mesh_grid_x): 
-    for j in range(mesh_grid_y):
-        # the points
-        value_mesh_points[i*mesh_grid_y+j,:] = vertice_grid[i*resolution_step, j*resolution_step, :]
-
-        # the edges and faces
-        # face calculation is based on edges, one faces consists of the two edges of the diagonal and one x edge
-        # may God have mercy on me for this index calculation
-
-        # x direction edges for curves 
-        if (j < mesh_grid_y-1):
-            x_edge_index = i*(mesh_grid_y-1)+j
-            value_mesh_edges[x_edge_index, :] = np.asarray([i*mesh_grid_y+j, i*mesh_grid_y+j+1])
-            # the x point for mesh faces 
-            if (i < mesh_grid_x-1):
-                value_mesh_faces[i*(mesh_grid_y-1)+j, 2] = np.int64(value_mesh_edges[x_edge_index,1])
-                value_mesh_faces[i*(mesh_grid_y-1)+j+number_of_faces//2, 2] = np.int64(value_mesh_edges[x_edge_index,0]+mesh_grid_x)
-
-        # the y direction edges
-        if (i < mesh_grid_x and (j != 0 or i==0) and i*(mesh_grid_y-1)+j+number_x_edges != number_x_edges+number_y_edges):
-            y_edge_index = i*(mesh_grid_y-1)+j+number_x_edges
-            value_mesh_edges[y_edge_index, :] = np.asarray([i*(mesh_grid_y-1)+j, (i+1)*mesh_grid_y+j-i])
-
-        # the diagonal edges
-        if (i >= mesh_grid_x-1 or j >= mesh_grid_y-1):
-            continue
-        else:
-            diag_edge_index = i*(mesh_grid_y-1)+j+number_x_edges+number_y_edges
-            value_mesh_edges[diag_edge_index,:] = np.asarray([i*mesh_grid_y+j, (i+1)*mesh_grid_y+j+1])
-
-            # diagonal points for mesh faces
-            # first half (left half of square)
-            value_mesh_faces[i*(mesh_grid_y-1)+j, 0] = np.int64(value_mesh_edges[diag_edge_index,0])
-            value_mesh_faces[i*(mesh_grid_y-1)+j, 1] = np.int64(value_mesh_edges[diag_edge_index,1])
-            # right half
-            value_mesh_faces[i*(mesh_grid_y-1)+j+number_of_faces//2, 0] = np.int64(value_mesh_edges[diag_edge_index,0])
-            value_mesh_faces[i*(mesh_grid_y-1)+j+number_of_faces//2, 1] = np.int64(value_mesh_edges[diag_edge_index,1])
-
+# visualizing functions as curve network or mesh
+value_mesh_points, value_mesh_edges, value_mesh_faces = func_visual.function_visualization.create_value_points_edges_mesh(5, vertice_grid)
             
 #value_curve_network = ps.register_curve_network("my_future_mesh", value_mesh_points, value_mesh_edges)  
 value_mesh = ps.register_surface_mesh("my_value_mesh", value_mesh_points, value_mesh_faces)      
@@ -189,6 +129,7 @@ value_mesh = ps.register_surface_mesh("my_value_mesh", value_mesh_points, value_
 # coloring the mesh
 # majority of point values determines color
 # ideally with LERP
+number_of_faces = value_mesh_faces.shape[0]
 value_mesh_colors = np.ndarray((number_of_faces,3))
 blue = np.asarray([0,0,1])
 red = np.asarray([1,0,0])
@@ -215,7 +156,7 @@ value_mesh.add_color_quantity("value_mesh_colors", value_mesh_colors, defined_on
 
         
 
-
+"""
 
 print("total points: ", number_mesh_points)
 print("total edges", number_total_edges)
@@ -227,7 +168,7 @@ print("mesh_y", mesh_grid_y)
 print("resolution step of mesh: ", resolution_step)
 print("number of mesh faces", number_of_faces)
 print("-"*50)
-
+"""
 
 
 
