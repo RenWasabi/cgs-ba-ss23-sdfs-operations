@@ -60,7 +60,8 @@ example2_visuals = [] # all visuals belonging to this example
 example2_primitives = [] # stores the visuals belonging to the two functions before operation
 example2_union = [] # all visuals belonging to union
 example2_intersection = []
-example2_complement = []
+example2_complement_square = []
+example2_complement_circle = []
 example2_square_subtract_circle = []
 example2_circle_subtract_square = []
 
@@ -76,7 +77,8 @@ circle1 = functions.circle_SDF(center_x2+0.5, center_y2+0.5, 1)
 
 function2union = functions.union(square1, circle1)
 function2intersection = functions.intersection(square1, circle1)
-function2complement = functions.complement(square1)
+function2complement_square = functions.complement(square1)
+function2complement_circle = functions.complement(circle1)
 function2difference_square = functions.subtract(square1, circle1)
 function2difference_circle = functions.subtract(circle1, square1)
 
@@ -122,13 +124,21 @@ example2_intersection.append(example2_visuals[len(example2_visuals)-3])
 example2_intersection.append(example2_visuals[len(example2_visuals)-2])
 example2_intersection.append(example2_visuals[len(example2_visuals)-1])
 
-# complement
-FOBfunction2complement = fob.FOB(function2complement, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
-name2complement = "function2complement"
-helper.hlp.ps_register_and_list_whole_FOB(FOBfunction2complement, name2complement, example2_visuals)
-example2_complement.append(example2_visuals[len(example2_visuals)-3])
-example2_complement.append(example2_visuals[len(example2_visuals)-2])
-example2_complement.append(example2_visuals[len(example2_visuals)-1])
+# complement of the square
+FOBfunction2complement_square = fob.FOB(function2complement_square, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
+name2complement_square = "function2complement"
+helper.hlp.ps_register_and_list_whole_FOB(FOBfunction2complement_square, name2complement_square, example2_visuals)
+example2_complement_square.append(example2_visuals[len(example2_visuals)-3])
+example2_complement_square.append(example2_visuals[len(example2_visuals)-2])
+example2_complement_square.append(example2_visuals[len(example2_visuals)-1])
+
+# complement of the circle
+FOBfunction2complement_circle = fob.FOB(function2complement_circle, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
+name2complement_circle = "function2complement_circle"
+helper.hlp.ps_register_and_list_whole_FOB(FOBfunction2complement_circle, name2complement_circle, example2_visuals)
+example2_complement_circle .append(example2_visuals[len(example2_visuals)-3])
+example2_complement_circle .append(example2_visuals[len(example2_visuals)-2])
+example2_complement_circle .append(example2_visuals[len(example2_visuals)-1])
 
 # subtract circle from square
 FOBfunction2difference_square = fob.FOB(function2difference_square, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
@@ -197,13 +207,14 @@ for example in ui_example_options:
         structure.set_enabled(False)
 
 # options for boolean operations example
-ui_boolean_operations = ["None","Union", "Intersection", "Complement", "Square\Circle", "Circle\Square" ]
+ui_boolean_operations = ["None","Union", "Intersection", "Square Complement", "Circle Complement", "Square\Circle", "Circle\Square" ]
 ui_boolean_operation_selected = ui_boolean_operations[0]
 boolean_op_dict = {
     "None" : [],
     "Union": example2_union,
     "Intersection" : example2_intersection,
-    "Complement" : example2_complement,
+    "Square Complement" : example2_complement_square,
+    "Circle Complement" : example2_complement_circle,
     "Square\Circle" : example2_square_subtract_circle,
     "Circle\Square" : example2_circle_subtract_square
 }
