@@ -6,6 +6,7 @@ import evaluation_grid as ev_grid
 import function_visualization as func_visual
 import sys # for printing max
 import function_object as fob
+import helper as helper
 
 # some options
 ps.set_program_name("first presentation main")
@@ -42,6 +43,12 @@ shifted_unit_circle_SDF = functions.circle_SDF(0, 0.7, 1.25)
 
 function1 = functions.intersection(unit_circle_SDF, shifted_unit_circle_SDF)
 FOBfunction1 = fob.FOB(function1, 0, 0, 0, 4, 5)
+name1 = "function1"
+helper.hlp.ps_register_whole_FOB(FOBfunction1, name1)
+
+"""
+
+
 isocurve1 = ps.register_curve_network("isocurve1", FOBfunction1.isocurve_points, FOBfunction1.isocurve_edges)
 FOBfunction1.compute_value_visuals()
 value_mesh1 = ps.register_surface_mesh("value_mesh1", FOBfunction1.value_mesh_points, FOBfunction1.value_mesh_faces)
@@ -50,6 +57,7 @@ value_mesh1.add_color_quantity("value_mesh1_colors", FOBfunction1.value_mesh_col
 value_plane1 = ps.register_surface_mesh("value_plane1", FOBfunction1.value_plane_points, FOBfunction1.value_mesh_faces)
 value_plane1.add_color_quantity("value_plane1_colors", FOBfunction1.value_mesh_colors, defined_on='faces', enabled=True)
                                    
+"""
                                    
 
 
