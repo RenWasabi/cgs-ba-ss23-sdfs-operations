@@ -120,17 +120,26 @@ value_plane1.add_color_quantity("value_plane1_colors", FOBfunction1.value_mesh_c
 
 ### UI
 
-active_example = "Level Set Methods"
+active_example = "None"
+
+
 example_dict = {
+    "None" : [],
     "Level Set Methods" : example1_visuals,
     "Boolean Operations" : example2_visuals
 }
 
+
+
 ui_text = "some input text"
 
 
-ui_example_options = ["Level Set Methods", "Boolean Operations"]
+ui_example_options = [ "None", "Level Set Methods", "Boolean Operations"]
 ui_example_options_selected = ui_example_options[0]
+
+for example in ui_example_options:
+    for structure in example_dict[example]:
+        structure.set_enabled(False)
 
 
 def my_function():
