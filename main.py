@@ -30,8 +30,8 @@ example1_visuals = []
 center_x1 = 0
 center_y1 = 0
 sidelength1 = 5
-resolution1 = 0.01
-resolution_step1 = 5
+resolution1 = 0.1
+resolution_step1 = 20
 
 unit_circle_SDF = functions.circle_SDF(center_x1+0,center_y1+0,1)
 shifted_unit_circle_SDF = functions.circle_SDF(center_x1+0.8, center_y1+0.8, 0.8)
@@ -57,6 +57,7 @@ helper.hlp.ps_register_and_list_whole_FOB(FOBfunction1c, name1c, example1_visual
 
 #  EXAMPLE BOOLEAN OPERATIONS START
 example2_visuals = [] # all visuals belonging to this example
+example2_primitives = [] # stores the visuals belonging to the two functions before operation
 example2_union = [] # all visuals belonging to union
 example2_intersection = []
 example2_complement = []
@@ -67,7 +68,7 @@ center_x2 = 0
 center_y2 = 0
 sidelength2 = 4
 resolution2 = 0.01
-resolution_step2 = 5
+resolution_step2 = 10
 isovalue2 = 0
 
 square1 = functions.rectangle_function(center_x2-0.3, center_y2+0, 1, 1)
@@ -79,7 +80,17 @@ function2complement = functions.complement(square1)
 function2difference_square = functions.subtract(square1, circle1)
 function2difference_circle = functions.subtract(circle1, square1)
 
-# render all in same spot, choose enabled one with button
+# the primitives
+prim1_x = center_x2 - sidelength2
+prim1_y = center_y2 - sidelength2
+square1prim = functions.rectangle_function(prim1_x-0.3, prim1_y+0, 1, 1)
+circle1prim = functions.circle_SDF(prim1_x+0.5, prim1_y+0.5,1)
+FOBfunction2prim1 = fob.FOB(circle1prim, isovalue2, prim1_x, prim1_y, sidelength2, resolution2, resolution_step2)
+name2prim1 = "function2prim1"
+helper.hlp.ps_register_and_list_whole_FOB(FOBfunction2prim1, name2prim1, example2_visuals)
+example2_primitives.append(example2_visuals[len(example2_visuals)-3])
+example2_primitives.append(example2_visuals[len(example2_visuals)-2])
+example2_primitives.append(example2_visuals[len(example2_visuals)-1])
 
 # union
 FOBfunction2union = fob.FOB(function2union, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
@@ -237,6 +248,9 @@ def callback():
                     # for Boolean operations we still want to select the specific operation to be displayed
                     if example != "Boolean Operations":
                         for structure in example_dict[example]:
+                            structure.set_enabled(True)
+                    else: # but in Boolean, always show the primitive examples besides the actual operation
+                        for structure in example2_primitives:
                             structure.set_enabled(True)
                     active_example = example
                 ui_example_options_selected = example
