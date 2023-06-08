@@ -30,8 +30,8 @@ example1_visuals = []
 center_x1 = 0
 center_y1 = 0
 sidelength1 = 5
-resolution1 = 0.1
-resolution_step1 = 20
+resolution1 = 0.01
+resolution_step1 = 10
 
 unit_circle_SDF = functions.circle_SDF(center_x1+0,center_y1+0,1)
 shifted_unit_circle_SDF = functions.circle_SDF(center_x1+0.8, center_y1+0.8, 0.8)
@@ -86,7 +86,7 @@ prim1_x = center_x2 - sidelength2
 prim1_y = center_y2 + sidelength2
 square1prim = functions.rectangle_function(prim1_x-0.3, prim1_y+0, 1, 1)
 circle1prim = functions.circle_SDF(prim1_x+0.5, prim1_y+0.5,1)
-FOBfunction2prim1 = fob.FOB(circle1prim, isovalue2, prim1_x, prim1_y, sidelength2, resolution2, resolution_step2)
+FOBfunction2prim1 = fob.FOB(square1prim, isovalue2, prim1_x, prim1_y, sidelength2, resolution2, resolution_step2)
 name2prim1 = "function2prim1"
 helper.hlp.ps_register_and_list_whole_FOB(FOBfunction2prim1, name2prim1, example2_visuals)
 example2_primitives.append(example2_visuals[len(example2_visuals)-3])

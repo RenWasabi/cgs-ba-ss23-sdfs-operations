@@ -19,7 +19,12 @@ def circle_SDF(center_x: float, center_y: float, radius: float):
 def rectangle_function(center_x: float, center_y: float, length: float, height: float):
     # mid should be -, but somehow + seems to produce the expected result
     #rectangle = lambda x,y: np.linalg.norm(np.maximum(np.abs(np.asarray([x,y]))-np.asarray([length, height]), np.asarray([0,0]))) - np.amin(np.max(np.abs(np.asarray([x,y])) - np.asarray([length, height])),0)
-    rectangle = lambda x,y: np.linalg.norm(np.maximum(np.abs(np.asarray([x,y]))-np.asarray([length, height]), np.asarray([0,0]))) + np.amin(np.max(np.abs(np.asarray([x,y])) - np.asarray([length, height])),0)
+    #rectangle = lambda x,y: np.linalg.norm(np.maximum(np.abs(np.asarray([(x-center_x),(y-center_y)]))-np.asarray([length, height]), np.asarray([0,0]))) - np.amin(np.max(np.abs(np.asarray([(x-center_x),(y-center_y)])) - np.asarray([length, height])),0)
+
+    #rectangle = lambda x,y: np.linalg.norm(np.maximum(np.abs(np.asarray([x,y]))-np.asarray([length, height]), np.asarray([0,0]))) + np.amin(np.max(np.abs(np.asarray([x,y])) - np.asarray([length, height])),0)
+
+    rectangle = lambda x,y: np.linalg.norm(np.maximum(np.abs(np.asarray([(x-center_x),(y-center_y)]))-np.asarray([length, height]), np.asarray([0,0]))) + np.amin(np.max(np.abs(np.asarray([(x-center_x),(y-center_y)])) - np.asarray([length, height])),0)
+
     
     return rectangle
 
