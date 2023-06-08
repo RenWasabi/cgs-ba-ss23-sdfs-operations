@@ -65,3 +65,64 @@ class function_visualization:
                     value_mesh_faces[i*(mesh_grid_y-1)+j+number_of_faces//2, 1] = np.int64(value_mesh_edges[diag_edge_index,1])
 
         return value_mesh_points, value_mesh_edges, value_mesh_faces
+    
+
+    # value_mesh_faces are the faces to be coloured
+    # value_mesh_points needs to be passed because it contains the function values 
+    # necessary for determining whether the face has positive or negative value
+    # returns an np.ndarray that assigns a color to each face, can be used with 
+    # polyscope's mesh.add_color_quantity(...)
+    @staticmethod
+    def create_mesh_colors(value_mesh_faces: np.ndarray, value_mesh_points: np.ndarray) -> np.ndarray:
+        # coloring the mesh
+        # majority of point values determines color
+        # ideally with LERP
+        number_of_faces = value_mesh_faces.shape[0]
+        value_mesh_colors = np.ndarray((number_of_faces,3))
+        blue = np.asarray([0,0,1])
+        red = np.asarray([1,0,0])
+        for face in range (number_of_faces):
+            positive_vertices = 0
+            for vertice in range(3):
+                this_vertice = value_mesh_faces[face,vertice]
+                this_value = value_mesh_points[np.int64(this_vertice),2]
+                if this_value > 0:
+                    positive_vertices += 1
+            if positive_vertices >= 2:
+                # color face red
+                value_mesh_colors[face] = red
+            else:
+                # color face blue
+                value_mesh_colors[face] = blue
+        return value_mesh_colors
+
+
+"""
+# visualizing functions values on z axis, as vectors
+#value_vectors = np.ndarray((vertice_grid.shape[0]*vertice_grid.shape[1], 3))
+value_vectors_points = []
+value_vectors_edges = []
+value_vectors_edge_colors = []
+point_index_counter = 0
+edge_index_counter = 0
+for i in range(0,vertice_grid_shape[0],25):
+    for j in range(0,vertice_grid_shape[1], 25):
+        # vertice_grid[i,j,2] = 100 should have the correct value still from ms squares
+        base = np.asarray([vertice_grid[i,j,0], vertice_grid[i,j,1], 0]) # the coordinate
+        top = np.asarray([vertice_grid[i,j,0], vertice_grid[i,j,1], vertice_grid[i,j,2]])
+        value_vectors_points.append(base)
+        value_vectors_points.append(top)
+        value_vectors_edges.append(np.asarray([point_index_counter, point_index_counter+1]))
+
+        # value <= 0 blue, else red
+        if (vertice_grid[i,j,2] <= 0): 
+            value_vectors_edge_colors.append(np.asarray([0,0,1]))
+        else:
+            value_vectors_edge_colors.append(np.asarray([1,0,0]))
+        point_index_counter += 2
+value_vectors_points = np.asarray(value_vectors_points)
+value_vectors_edges = np.asarray(value_vectors_edges)
+value_vectors_edge_colors = np.asarray(value_vectors_edge_colors)
+value_net = ps.register_curve_network("my_value_vectors", value_vectors_points, value_vectors_edges, transparency=0.3)
+value_net.add_color_quantity("my_value_colors", value_vectors_edge_colors, defined_on="edges", enabled=True)
+"""

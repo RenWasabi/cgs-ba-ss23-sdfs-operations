@@ -90,62 +90,19 @@ squares_rectangle = ms.MS_Grid(vertice_grid,0,functions.subtract(rectangle, shif
 rectangle_points, rectangle_edges = squares_rectangle.full_run()
 shape_rectangle = ps.register_curve_network("rectangle", rectangle_points, rectangle_edges)
 
-"""
-# visualizing functions values on z axis, as vectors
-#value_vectors = np.ndarray((vertice_grid.shape[0]*vertice_grid.shape[1], 3))
-value_vectors_points = []
-value_vectors_edges = []
-value_vectors_edge_colors = []
-point_index_counter = 0
-edge_index_counter = 0
-for i in range(0,vertice_grid_shape[0],25):
-    for j in range(0,vertice_grid_shape[1], 25):
-        # vertice_grid[i,j,2] = 100 should have the correct value still from ms squares
-        base = np.asarray([vertice_grid[i,j,0], vertice_grid[i,j,1], 0]) # the coordinate
-        top = np.asarray([vertice_grid[i,j,0], vertice_grid[i,j,1], vertice_grid[i,j,2]])
-        value_vectors_points.append(base)
-        value_vectors_points.append(top)
-        value_vectors_edges.append(np.asarray([point_index_counter, point_index_counter+1]))
 
-        # value <= 0 blue, else red
-        if (vertice_grid[i,j,2] <= 0): 
-            value_vectors_edge_colors.append(np.asarray([0,0,1]))
-        else:
-            value_vectors_edge_colors.append(np.asarray([1,0,0]))
-        point_index_counter += 2
-value_vectors_points = np.asarray(value_vectors_points)
-value_vectors_edges = np.asarray(value_vectors_edges)
-value_vectors_edge_colors = np.asarray(value_vectors_edge_colors)
-value_net = ps.register_curve_network("my_value_vectors", value_vectors_points, value_vectors_edges, transparency=0.3)
-value_net.add_color_quantity("my_value_colors", value_vectors_edge_colors, defined_on="edges", enabled=True)
-"""
 
 # visualizing functions as curve network or mesh
 value_mesh_points, value_mesh_edges, value_mesh_faces = func_visual.function_visualization.create_value_points_edges_mesh(5, vertice_grid)
             
 #value_curve_network = ps.register_curve_network("my_future_mesh", value_mesh_points, value_mesh_edges)  
 value_mesh = ps.register_surface_mesh("my_value_mesh", value_mesh_points, value_mesh_faces)      
-         
+
+
+
+
 # coloring the mesh
-# majority of point values determines color
-# ideally with LERP
-number_of_faces = value_mesh_faces.shape[0]
-value_mesh_colors = np.ndarray((number_of_faces,3))
-blue = np.asarray([0,0,1])
-red = np.asarray([1,0,0])
-for face in range (number_of_faces):
-    positive_vertices = 0
-    for vertice in range(3):
-        this_vertice = value_mesh_faces[face,vertice]
-        this_value = value_mesh_points[np.int64(this_vertice),2]
-        if this_value > 0:
-            positive_vertices += 1
-    if positive_vertices >= 2:
-        # color face red
-        value_mesh_colors[face] = red
-    else:
-        # color face blue
-        value_mesh_colors[face] = blue
+value_mesh_colors = func_visual.function_visualization.create_mesh_colors(value_mesh_faces, value_mesh_points)
 value_mesh.add_color_quantity("value_mesh_colors", value_mesh_colors, defined_on='faces', enabled=True)
     
 
