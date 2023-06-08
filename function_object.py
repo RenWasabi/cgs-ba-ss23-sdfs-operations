@@ -41,18 +41,20 @@ import sys # for printing max
 class FOB:
     # the ev_* terms describe the location and dimension of the discrete grid on which the function will be evaluated
     # the isovalue determines the isocurve
-    # resolution does not affect the isocurve, but the resolution of the mesh (/curve network) visualizing the function values
-    def __init__(self, function, isovalue: float, ev_center_x: float, ev_center_y: float, ev_sidelength: float, resolution_step: int):
+    # ev_resolution affects marching square and isocurve (determines spacing of the vertices of evaluation grid)
+    # resolution_step does not affect the isocurve, but the resolution of the mesh (/curve network) visualizing the function values
+    def __init__(self, function, isovalue: float, ev_center_x: float, ev_center_y: float, ev_sidelength: float, ev_resolution: float, resolution_step: int):
         self.function = function
         self.isovalue = isovalue
         self.ev_center_x = ev_center_x
         self.ev_center_y = ev_center_y
-        self.ev_sidelenth = ev_sidelength
+        self.ev_sidelength = ev_sidelength
+        self.ev_resolution = ev_resolution
         self.resolution_step = resolution_step
 
         # create the vertice grid to discretely evaluate the function on
         # format: [x_position, y_position, function_value]
-        self.evaluation_grid = ev_grid.evaluation_grid().create_vertice_grid(0,0,4,0.01)
+        self.evaluation_grid = ev_grid.evaluation_grid().create_vertice_grid(self.ev_center_x, self.ev_center_y, self.ev_sidelength, self.ev_resolution)
 
         # use Marching Squares on the function (marching squares object)
         MS_FOB = ms.MS_Grid(self.evaluation_grid, isovalue, function)
@@ -63,7 +65,7 @@ class FOB:
     def compute_value_visuals(self):
         # visualizing functions as curve network or mesh
         self.value_mesh_points, self.value_mesh_edges, self.value_mesh_faces = func_visual.function_visualization.create_value_points_edges_mesh(self.resolution_step, self.evaluation_grid)     
-        self.value_mesh_colors = func_visual.function_visualization.create_mesh_colors(self.value_mesh_faces, self.value_mesh_points)
+        self.value_mesh_colors = func_visual.function_visualization.create_mesh_colors(self.value_mesh_faces, self.value_mesh_points, self.isovalue)
 
         # create a colored mesh plane that is the value mesh, squashed to a flat plane at the height of isovalue
         self.value_plane_points = np.ndarray(self.value_mesh_points.shape)
