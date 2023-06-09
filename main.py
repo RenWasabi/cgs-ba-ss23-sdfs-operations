@@ -24,7 +24,10 @@ helper.hlp.create_coordinate_axis()
 # for visibility control of elements -> for several examples:
 # when using register_and_list_whole_FOB, the plane is always the last entry appended to the list
 examples_planes = []
-
+# all the (3d) value meshes, middle entry
+examples_value_meshes = []
+# all the isocurves, first entry
+examples_isocurves = []
 
 # EXAMPLE LEVEL SETS START
 # stores all the polyscope structures belonging to example 1
@@ -48,16 +51,23 @@ FOBfunction1a = fob.FOB(function1, 0, center_x1, center_y1, sidelength1, resolut
 name1a = "function1_a"
 helper.hlp.ps_register_and_list_whole_FOB(FOBfunction1a, name1a, example1_visuals)
 examples_planes.append(example1_visuals[-1])
+examples_value_meshes.append(example1_visuals[-2])
+examples_isocurves.append(example1_visuals[-3])
+
 # isovalue -0.5
 FOBfunction1b = fob.FOB(function1, -0.5, center_x1, center_y1, sidelength1, resolution1, resolution_step1)
 name1b = "function1_b"
 helper.hlp.ps_register_and_list_whole_FOB(FOBfunction1b, name1b, example1_visuals)
 examples_planes.append(example1_visuals[-1])
+examples_value_meshes.append(example1_visuals[-2])
+examples_isocurves.append(example1_visuals[-3])
 # isovalue 0.5
 FOBfunction1c = fob.FOB(function1, 0.5, center_x1, center_y1, sidelength1, resolution1, resolution_step1)
 name1c = "function1_c"
 helper.hlp.ps_register_and_list_whole_FOB(FOBfunction1c, name1c, example1_visuals)
 examples_planes.append(example1_visuals[-1])
+examples_value_meshes.append(example1_visuals[-2])
+examples_isocurves.append(example1_visuals[-3])
 
 # EXAMPLE LEVEL SETS END
 #"""
@@ -114,6 +124,8 @@ example2_primitives.append(example2_visuals[len(example2_visuals)-3])
 example2_primitives.append(example2_visuals[len(example2_visuals)-2])
 example2_primitives.append(example2_visuals[len(example2_visuals)-1])
 examples_planes.append(example2_visuals[-1])
+examples_value_meshes.append(example2_visuals[-2])
+examples_isocurves.append(example2_visuals[-3])
 
 
 # right primitive
@@ -129,6 +141,8 @@ example2_primitives.append(example2_visuals[len(example2_visuals)-3])
 example2_primitives.append(example2_visuals[len(example2_visuals)-2])
 example2_primitives.append(example2_visuals[len(example2_visuals)-1])
 examples_planes.append(example2_visuals[-1])
+examples_value_meshes.append(example2_visuals[-2])
+examples_isocurves.append(example2_visuals[-3])
 
 # union
 FOBfunction2union = fob.FOB(function2union, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
@@ -139,6 +153,8 @@ example2_union.append(example2_visuals[len(example2_visuals)-3])
 example2_union.append(example2_visuals[len(example2_visuals)-2])
 example2_union.append(example2_visuals[len(example2_visuals)-1])
 examples_planes.append(example2_visuals[-1])
+examples_value_meshes.append(example2_visuals[-2])
+examples_isocurves.append(example2_visuals[-3])
 
 
 # intersection
@@ -149,6 +165,8 @@ example2_intersection.append(example2_visuals[len(example2_visuals)-3])
 example2_intersection.append(example2_visuals[len(example2_visuals)-2])
 example2_intersection.append(example2_visuals[len(example2_visuals)-1])
 examples_planes.append(example2_visuals[-1])
+examples_value_meshes.append(example2_visuals[-2])
+examples_isocurves.append(example2_visuals[-3])
 
 
 # complement of the square
@@ -159,6 +177,8 @@ example2_complement_square.append(example2_visuals[len(example2_visuals)-3])
 example2_complement_square.append(example2_visuals[len(example2_visuals)-2])
 example2_complement_square.append(example2_visuals[len(example2_visuals)-1])
 examples_planes.append(example2_visuals[-1])
+examples_value_meshes.append(example2_visuals[-2])
+examples_isocurves.append(example2_visuals[-3])
 
 
 # complement of the circle
@@ -169,6 +189,8 @@ example2_complement_circle .append(example2_visuals[len(example2_visuals)-3])
 example2_complement_circle .append(example2_visuals[len(example2_visuals)-2])
 example2_complement_circle .append(example2_visuals[len(example2_visuals)-1])
 examples_planes.append(example2_visuals[-1])
+examples_value_meshes.append(example2_visuals[-2])
+examples_isocurves.append(example2_visuals[-3])
 
 
 # subtract circle from square
@@ -179,6 +201,8 @@ example2_square_subtract_circle.append(example2_visuals[len(example2_visuals)-3]
 example2_square_subtract_circle.append(example2_visuals[len(example2_visuals)-2])
 example2_square_subtract_circle.append(example2_visuals[len(example2_visuals)-1])
 examples_planes.append(example2_visuals[-1])
+examples_value_meshes.append(example2_visuals[-2])
+examples_isocurves.append(example2_visuals[-3])
 
 
 # subtract square from circle
@@ -189,6 +213,8 @@ example2_circle_subtract_square.append(example2_visuals[len(example2_visuals)-3]
 example2_circle_subtract_square.append(example2_visuals[len(example2_visuals)-2])
 example2_circle_subtract_square.append(example2_visuals[len(example2_visuals)-1])
 examples_planes.append(example2_visuals[-1])
+examples_value_meshes.append(example2_visuals[-2])
+examples_isocurves.append(example2_visuals[-3])
 
 
 # SMOOTH
@@ -201,6 +227,8 @@ example2_smooth_union.append(example2_visuals[len(example2_visuals)-3])
 example2_smooth_union.append(example2_visuals[len(example2_visuals)-2])
 example2_smooth_union.append(example2_visuals[len(example2_visuals)-1])
 examples_planes.append(example2_visuals[-1])
+examples_value_meshes.append(example2_visuals[-2])
+examples_isocurves.append(example2_visuals[-3])
 
 
 # smooth intersection
@@ -211,6 +239,8 @@ example2_smooth_intersection.append(example2_visuals[len(example2_visuals)-3])
 example2_smooth_intersection.append(example2_visuals[len(example2_visuals)-2])
 example2_smooth_intersection.append(example2_visuals[len(example2_visuals)-1])
 examples_planes.append(example2_visuals[-1])
+examples_value_meshes.append(example2_visuals[-2])
+examples_isocurves.append(example2_visuals[-3])
 
 
 # smooth square \ circle
@@ -221,6 +251,8 @@ example2_smooth_square_subtract_circle.append(example2_visuals[len(example2_visu
 example2_smooth_square_subtract_circle.append(example2_visuals[len(example2_visuals)-2])
 example2_smooth_square_subtract_circle.append(example2_visuals[len(example2_visuals)-1])
 examples_planes.append(example2_visuals[-1])
+examples_value_meshes.append(example2_visuals[-2])
+examples_isocurves.append(example2_visuals[-3])
 
 
 # smooth circle \ square
@@ -231,6 +263,8 @@ example2_smooth_circle_substract_square.append(example2_visuals[len(example2_vis
 example2_smooth_circle_substract_square.append(example2_visuals[len(example2_visuals)-2])
 example2_smooth_circle_substract_square.append(example2_visuals[len(example2_visuals)-1])
 examples_planes.append(example2_visuals[-1])
+examples_value_meshes.append(example2_visuals[-2])
+examples_isocurves.append(example2_visuals[-3])
 
 
 # EXAMPLE BOOLEAN OPERATIONS END
@@ -255,6 +289,8 @@ FOBfunction3implicit_circle = fob.FOB(implicit_circle, isovalue3, center_x3-side
 name3implicit_circle = "function3implicit_circle"
 helper.hlp.ps_register_and_list_whole_FOB(FOBfunction3implicit_circle, name3implicit_circle, example3_visuals)
 examples_planes.append(example3_visuals[-1])
+examples_value_meshes.append(example3_visuals[-2])
+examples_isocurves.append(example3_visuals[-3])
 
 
 # SDF circle
@@ -262,6 +298,8 @@ FOBfunction3SDF_circle = fob.FOB(SDF_circle, isovalue3, center_x3+sidelength3, c
 name3SDF_circle = "function3SDF_circle"
 helper.hlp.ps_register_and_list_whole_FOB(FOBfunction3SDF_circle, name3SDF_circle, example3_visuals)
 examples_planes.append(example3_visuals[-1])
+examples_value_meshes.append(example3_visuals[-2])
+examples_isocurves.append(example3_visuals[-3])
 
 
 
@@ -278,7 +316,9 @@ examples_planes.append(example3_visuals[-1])
 active_example = "None"
 
 visibility_dict = {
-    "Planes" : examples_planes
+    "Planes" : examples_planes,
+    "Value Meshes": examples_value_meshes,
+    "Isocurves" : examples_isocurves
 }
 
 # this will store all structures that are allowed to be shown based on the current example/operation
@@ -334,10 +374,12 @@ def my_function():
 # We can write any code we want here, but in particular it is an opportunity to create ImGui 
 # interface elements and define a custom UI.
 flag_plane = True
+flag_value_mesh = True
+flag_isocurve = True
 def callback():
 
 
-    global ui_text, ui_example_options, ui_example_options_selected, active_example, ui_boolean_operations, ui_boolean_operation_selected, flag_plane, allowed_structures
+    global ui_text, ui_example_options, ui_example_options_selected, active_example, ui_boolean_operations, ui_boolean_operation_selected, flag_plane, flag_value_mesh, flag_isocurve, allowed_structures
 
 
 
@@ -356,12 +398,28 @@ def callback():
 
 
     # Checkboxes for visibility of elements
-    changed, flag_plane = psim.Checkbox("Show planes", flag_plane) 
+    psim.TextUnformatted("Show:")
+    # for planes
+    changed, flag_plane = psim.Checkbox("Planes", flag_plane) 
     if(changed): # optionally, use this conditional to take action on the new value
         for structure in allowed_structures:
             if structure in examples_planes:
                 structure.set_enabled(flag_plane)
-        print("Plane flag is is:", flag_plane)
+    # for value meshes
+    psim.SameLine() 
+    changed, flag_value_mesh = psim.Checkbox("Value Meshes", flag_value_mesh) 
+    if(changed): # optionally, use this conditional to take action on the new value
+        for structure in allowed_structures:
+            if structure in examples_value_meshes:
+                structure.set_enabled(flag_value_mesh)
+    # for isocurves
+    changed, flag_isocurve = psim.Checkbox("Isocurves", flag_isocurve) 
+    if(changed): # optionally, use this conditional to take action on the new value
+        for structure in allowed_structures:
+            if structure in examples_isocurves:
+                structure.set_enabled(flag_isocurve)
+    
+    psim.Separator()
         
 
 
@@ -385,13 +443,21 @@ def callback():
                         for structure in example_dict[example]:
                             if structure in examples_planes:
                                 structure.set_enabled(flag_plane)
-                            else:
+                            elif structure in examples_value_meshes:
+                                structure.set_enabled(flag_value_mesh)   
+                            elif structure in examples_isocurves:
+                                structure.set_enabled(flag_isocurve)                         
+                            else: 
                                 structure.set_enabled(True)
                         allowed_structures = example_dict[example]
                     else: # but in Boolean, always show the primitive examples besides the actual operation
                         for structure in example2_primitives:
                             if structure in examples_planes:
                                 structure.set_enabled(flag_plane)
+                            elif structure in examples_value_meshes:
+                                structure.set_enabled(flag_value_mesh)
+                            elif structure in examples_isocurves:
+                                structure.set_enabled(flag_isocurve)
                             else:
                                 structure.set_enabled(True)
                         allowed_structures = example_dict[example] + example2_primitives # while doing boolean op, these are always allowed
@@ -418,6 +484,10 @@ def callback():
                         for structure in boolean_op_dict[operation]:
                             if structure in examples_planes:
                                 structure.set_enabled(flag_plane)
+                            elif structure in examples_value_meshes:
+                                structure.set_enabled(flag_value_mesh)
+                            elif structure in examples_isocurves:
+                                structure.set_enabled(flag_isocurve)
                             else:
                                 structure.set_enabled(True)
                         ui_boolean_operation_selected = operation

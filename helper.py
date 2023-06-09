@@ -19,6 +19,10 @@ class hlp:
         value_plane1 = ps.register_surface_mesh(name+"_value_plane", myFOB.value_plane_points, myFOB.value_mesh_faces)
         value_plane1.add_color_quantity(name+"_value_plane_colors", myFOB.value_mesh_colors, defined_on='faces', enabled=True)
 
+    # always appends 3 structures
+    # 1. isocurve
+    # 2. value mesh
+    # 3. value plane
     def ps_register_and_list_whole_FOB(myFOB: fob.FOB, name: str, example_list: list):
         isocurve1 = ps.register_curve_network(name+"_isocurve", myFOB.isocurve_points, myFOB.isocurve_edges)
         example_list.append(isocurve1)
