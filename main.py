@@ -21,6 +21,9 @@ ps.init()
 helper.hlp.create_coordinate_axis()
 
 # EXAMPLE CASES/SCENES
+# for visibility control of elements -> for several examples:
+# when using register_and_list_whole_FOB, the plane is always the last entry appended to the list
+examples_planes = []
 
 
 # EXAMPLE LEVEL SETS START
@@ -31,8 +34,8 @@ example1_visuals = []
 center_x1 = 0
 center_y1 = 0
 sidelength1 = 5
-resolution1 = 0.01
-resolution_step1 = 5
+resolution1 = 0.1
+resolution_step1 = 10
 
 unit_circle_SDF = functions.circle_SDF(center_x1+0,center_y1+0,1)
 shifted_unit_circle_SDF = functions.circle_SDF(center_x1+0.8, center_y1+0.8, 0.8)
@@ -44,14 +47,17 @@ function1 = functions.union(unit_circle_SDF, shifted_unit_circle_SDF)
 FOBfunction1a = fob.FOB(function1, 0, center_x1, center_y1, sidelength1, resolution1, resolution_step1)
 name1a = "function1_a"
 helper.hlp.ps_register_and_list_whole_FOB(FOBfunction1a, name1a, example1_visuals)
+examples_planes.append(example1_visuals[-1])
 # isovalue -0.5
 FOBfunction1b = fob.FOB(function1, -0.5, center_x1, center_y1, sidelength1, resolution1, resolution_step1)
 name1b = "function1_b"
 helper.hlp.ps_register_and_list_whole_FOB(FOBfunction1b, name1b, example1_visuals)
+examples_planes.append(example1_visuals[-1])
 # isovalue 0.5
 FOBfunction1c = fob.FOB(function1, 0.5, center_x1, center_y1, sidelength1, resolution1, resolution_step1)
 name1c = "function1_c"
 helper.hlp.ps_register_and_list_whole_FOB(FOBfunction1c, name1c, example1_visuals)
+examples_planes.append(example1_visuals[-1])
 
 # EXAMPLE LEVEL SETS END
 #"""
@@ -75,8 +81,8 @@ example2_smooth_circle_substract_square = []
 center_x2 = 0
 center_y2 = 0
 sidelength2 = 4
-resolution2 = 0.01
-resolution_step2 = 5
+resolution2 = 0.1
+resolution_step2 = 10
 isovalue2 = 0
 
 square1 = functions.rectangle_function(center_x2-0.3, center_y2+0, 1, 1)
@@ -107,6 +113,9 @@ helper.hlp.ps_register_and_list_whole_FOB(FOBfunction2prim1, name2prim1, example
 example2_primitives.append(example2_visuals[len(example2_visuals)-3])
 example2_primitives.append(example2_visuals[len(example2_visuals)-2])
 example2_primitives.append(example2_visuals[len(example2_visuals)-1])
+examples_planes.append(example2_visuals[-1])
+
+
 # right primitive
 prim2_x = center_x2 + sidelength2
 prim2_y = center_y2 + sidelength2
@@ -119,6 +128,7 @@ helper.hlp.ps_register_and_list_whole_FOB(FOBfunction2prim2, name2prim2, example
 example2_primitives.append(example2_visuals[len(example2_visuals)-3])
 example2_primitives.append(example2_visuals[len(example2_visuals)-2])
 example2_primitives.append(example2_visuals[len(example2_visuals)-1])
+examples_planes.append(example2_visuals[-1])
 
 # union
 FOBfunction2union = fob.FOB(function2union, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
@@ -128,6 +138,8 @@ helper.hlp.ps_register_and_list_whole_FOB(FOBfunction2union, name2union, example
 example2_union.append(example2_visuals[len(example2_visuals)-3])
 example2_union.append(example2_visuals[len(example2_visuals)-2])
 example2_union.append(example2_visuals[len(example2_visuals)-1])
+examples_planes.append(example2_visuals[-1])
+
 
 # intersection
 FOBfunction2intersection = fob.FOB(function2intersection, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
@@ -136,6 +148,8 @@ helper.hlp.ps_register_and_list_whole_FOB(FOBfunction2intersection, name2interse
 example2_intersection.append(example2_visuals[len(example2_visuals)-3])
 example2_intersection.append(example2_visuals[len(example2_visuals)-2])
 example2_intersection.append(example2_visuals[len(example2_visuals)-1])
+examples_planes.append(example2_visuals[-1])
+
 
 # complement of the square
 FOBfunction2complement_square = fob.FOB(function2complement_square, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
@@ -144,6 +158,8 @@ helper.hlp.ps_register_and_list_whole_FOB(FOBfunction2complement_square, name2co
 example2_complement_square.append(example2_visuals[len(example2_visuals)-3])
 example2_complement_square.append(example2_visuals[len(example2_visuals)-2])
 example2_complement_square.append(example2_visuals[len(example2_visuals)-1])
+examples_planes.append(example2_visuals[-1])
+
 
 # complement of the circle
 FOBfunction2complement_circle = fob.FOB(function2complement_circle, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
@@ -152,6 +168,8 @@ helper.hlp.ps_register_and_list_whole_FOB(FOBfunction2complement_circle, name2co
 example2_complement_circle .append(example2_visuals[len(example2_visuals)-3])
 example2_complement_circle .append(example2_visuals[len(example2_visuals)-2])
 example2_complement_circle .append(example2_visuals[len(example2_visuals)-1])
+examples_planes.append(example2_visuals[-1])
+
 
 # subtract circle from square
 FOBfunction2difference_square = fob.FOB(function2difference_square, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
@@ -160,6 +178,8 @@ helper.hlp.ps_register_and_list_whole_FOB(FOBfunction2difference_square, name2di
 example2_square_subtract_circle.append(example2_visuals[len(example2_visuals)-3])
 example2_square_subtract_circle.append(example2_visuals[len(example2_visuals)-2])
 example2_square_subtract_circle.append(example2_visuals[len(example2_visuals)-1])
+examples_planes.append(example2_visuals[-1])
+
 
 # subtract square from circle
 FOBfunction2difference_circle = fob.FOB(function2difference_circle, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
@@ -168,6 +188,8 @@ helper.hlp.ps_register_and_list_whole_FOB(FOBfunction2difference_circle, name2di
 example2_circle_subtract_square.append(example2_visuals[len(example2_visuals)-3])
 example2_circle_subtract_square.append(example2_visuals[len(example2_visuals)-2])
 example2_circle_subtract_square.append(example2_visuals[len(example2_visuals)-1])
+examples_planes.append(example2_visuals[-1])
+
 
 # SMOOTH
 
@@ -178,6 +200,8 @@ helper.hlp.ps_register_and_list_whole_FOB(FOBfunction2smooth_union, name2smooth_
 example2_smooth_union.append(example2_visuals[len(example2_visuals)-3])
 example2_smooth_union.append(example2_visuals[len(example2_visuals)-2])
 example2_smooth_union.append(example2_visuals[len(example2_visuals)-1])
+examples_planes.append(example2_visuals[-1])
+
 
 # smooth intersection
 FOBfunction2smooth_intersection = fob.FOB(function2_smooth_intersection, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
@@ -186,6 +210,8 @@ helper.hlp.ps_register_and_list_whole_FOB(FOBfunction2smooth_intersection, name2
 example2_smooth_intersection.append(example2_visuals[len(example2_visuals)-3])
 example2_smooth_intersection.append(example2_visuals[len(example2_visuals)-2])
 example2_smooth_intersection.append(example2_visuals[len(example2_visuals)-1])
+examples_planes.append(example2_visuals[-1])
+
 
 # smooth square \ circle
 FOBfunction2smooth_square_subtract_circle = fob.FOB(function2_smooth_square_subtract_circle, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
@@ -194,6 +220,8 @@ helper.hlp.ps_register_and_list_whole_FOB(FOBfunction2smooth_square_subtract_cir
 example2_smooth_square_subtract_circle.append(example2_visuals[len(example2_visuals)-3])
 example2_smooth_square_subtract_circle.append(example2_visuals[len(example2_visuals)-2])
 example2_smooth_square_subtract_circle.append(example2_visuals[len(example2_visuals)-1])
+examples_planes.append(example2_visuals[-1])
+
 
 # smooth circle \ square
 FOBfunction2smooth_circle_substract_square = fob.FOB(function2_smooth_circle_substract_square, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
@@ -202,6 +230,8 @@ helper.hlp.ps_register_and_list_whole_FOB(FOBfunction2smooth_circle_substract_sq
 example2_smooth_circle_substract_square.append(example2_visuals[len(example2_visuals)-3])
 example2_smooth_circle_substract_square.append(example2_visuals[len(example2_visuals)-2])
 example2_smooth_circle_substract_square.append(example2_visuals[len(example2_visuals)-1])
+examples_planes.append(example2_visuals[-1])
+
 
 # EXAMPLE BOOLEAN OPERATIONS END
 #"""
@@ -213,8 +243,8 @@ example3_visuals = []
 center_x3 = 0
 center_y3 = 0
 sidelength3 = 7
-resolution3 = 0.05
-resolution_step3 =3
+resolution3 = 0.1
+resolution_step3 = 10
 isovalue3 = 0
 
 implicit_circle = functions.circle_function(center_x3-sidelength3, center_y3, 1)
@@ -224,11 +254,14 @@ SDF_circle = functions.circle_SDF(center_x3+sidelength3, center_y3, 1)
 FOBfunction3implicit_circle = fob.FOB(implicit_circle, isovalue3, center_x3-sidelength3, center_y3, sidelength3, resolution3, resolution_step3)
 name3implicit_circle = "function3implicit_circle"
 helper.hlp.ps_register_and_list_whole_FOB(FOBfunction3implicit_circle, name3implicit_circle, example3_visuals)
+examples_planes.append(example3_visuals[-1])
+
 
 # SDF circle
 FOBfunction3SDF_circle = fob.FOB(SDF_circle, isovalue3, center_x3+sidelength3, center_y3, sidelength3, resolution3, resolution_step3)
 name3SDF_circle = "function3SDF_circle"
 helper.hlp.ps_register_and_list_whole_FOB(FOBfunction3SDF_circle, name3SDF_circle, example3_visuals)
+examples_planes.append(example3_visuals[-1])
 
 
 
@@ -244,6 +277,13 @@ helper.hlp.ps_register_and_list_whole_FOB(FOBfunction3SDF_circle, name3SDF_circl
 
 active_example = "None"
 
+visibility_dict = {
+    "Planes" : examples_planes
+}
+
+# this will store all structures that are allowed to be shown based on the current example/operation
+# selection, also the ones that are not allowed to be visible due to visibility flags
+allowed_structures = []
 
 example_dict = {
     "None" : [],
@@ -293,10 +333,11 @@ def my_function():
 # Define our callback function, which Polyscope will repeatedly execute while running the UI.
 # We can write any code we want here, but in particular it is an opportunity to create ImGui 
 # interface elements and define a custom UI.
+flag_plane = True
 def callback():
 
 
-    global ui_text, ui_example_options, ui_example_options_selected, active_example, ui_boolean_operations, ui_boolean_operation_selected
+    global ui_text, ui_example_options, ui_example_options_selected, active_example, ui_boolean_operations, ui_boolean_operation_selected, flag_plane, allowed_structures
 
 
 
@@ -312,6 +353,16 @@ def callback():
     psim.TextUnformatted("Some sample text")
     psim.TextUnformatted("An important value: {}".format(42))
     psim.Separator()
+
+
+    # Checkboxes for visibility of elements
+    changed, flag_plane = psim.Checkbox("Show planes", flag_plane) 
+    if(changed): # optionally, use this conditional to take action on the new value
+        for structure in allowed_structures:
+            if structure in examples_planes:
+                structure.set_enabled(flag_plane)
+        print("Plane flag is is:", flag_plane)
+        
 
 
 
@@ -332,10 +383,18 @@ def callback():
                     # for Boolean operations we still want to select the specific operation to be displayed
                     if example != "Boolean Operations":
                         for structure in example_dict[example]:
-                            structure.set_enabled(True)
+                            if structure in examples_planes:
+                                structure.set_enabled(flag_plane)
+                            else:
+                                structure.set_enabled(True)
+                        allowed_structures = example_dict[example]
                     else: # but in Boolean, always show the primitive examples besides the actual operation
                         for structure in example2_primitives:
-                            structure.set_enabled(True)
+                            if structure in examples_planes:
+                                structure.set_enabled(flag_plane)
+                            else:
+                                structure.set_enabled(True)
+                        allowed_structures = example_dict[example] + example2_primitives # while doing boolean op, these are always allowed
                     active_example = example
                 ui_example_options_selected = example
         psim.EndCombo()
@@ -357,8 +416,12 @@ def callback():
                         for structure in boolean_op_dict[ui_boolean_operation_selected]:
                             structure.set_enabled(False)
                         for structure in boolean_op_dict[operation]:
-                            structure.set_enabled(True)
-                    ui_boolean_operation_selected = operation
+                            if structure in examples_planes:
+                                structure.set_enabled(flag_plane)
+                            else:
+                                structure.set_enabled(True)
+                        ui_boolean_operation_selected = operation
+                        allowed_structures = boolean_op_dict[operation] + example2_primitives
             psim.EndCombo()
         psim.PopItemWidth()
 
