@@ -64,12 +64,17 @@ example2_complement_square = []
 example2_complement_circle = []
 example2_square_subtract_circle = []
 example2_circle_subtract_square = []
+# smooth
+example2_smooth_union = []
+example2_smooth_intersection = []
+example2_smooth_square_subtract_circle = []
+example2_smooth_circle_substract_square = []
 
 center_x2 = 0
 center_y2 = 0
 sidelength2 = 4
 resolution2 = 0.01
-resolution_step2 = 10
+resolution_step2 = 5
 isovalue2 = 0
 
 square1 = functions.rectangle_function(center_x2-0.3, center_y2+0, 1, 1)
@@ -81,6 +86,12 @@ function2complement_square = functions.complement(square1)
 function2complement_circle = functions.complement(circle1)
 function2difference_square = functions.subtract(square1, circle1)
 function2difference_circle = functions.subtract(circle1, square1)
+# smooth
+function2_smooth_union = functions.smooth_union(square1, circle1, 0.3)
+function2_smooth_intersection = functions.smooth_intersection(square1, circle1, 0.3)
+function2_smooth_square_subtract_circle = functions.smooth_subtract(circle1, square1, 0.5)
+function2_smooth_circle_substract_square = functions.smooth_subtract(square1, circle1, 0.5)
+
 
 # the primitives
 # left primitive
@@ -156,12 +167,43 @@ example2_circle_subtract_square.append(example2_visuals[len(example2_visuals)-3]
 example2_circle_subtract_square.append(example2_visuals[len(example2_visuals)-2])
 example2_circle_subtract_square.append(example2_visuals[len(example2_visuals)-1])
 
+# SMOOTH
 
+# smooth union
+FOBfunction2smooth_union = fob.FOB(function2_smooth_union, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
+name2smooth_union = "function2smooth_union"
+helper.hlp.ps_register_and_list_whole_FOB(FOBfunction2smooth_union, name2smooth_union, example2_visuals)
+example2_smooth_union.append(example2_visuals[len(example2_visuals)-3])
+example2_smooth_union.append(example2_visuals[len(example2_visuals)-2])
+example2_smooth_union.append(example2_visuals[len(example2_visuals)-1])
 
+# smooth intersection
+FOBfunction2smooth_intersection = fob.FOB(function2_smooth_intersection, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
+name2smooth_intersection = "function2smooth_intersection"
+helper.hlp.ps_register_and_list_whole_FOB(FOBfunction2smooth_intersection, name2smooth_intersection, example2_visuals)
+example2_smooth_intersection.append(example2_visuals[len(example2_visuals)-3])
+example2_smooth_intersection.append(example2_visuals[len(example2_visuals)-2])
+example2_smooth_intersection.append(example2_visuals[len(example2_visuals)-1])
 
+# smooth square \ circle
+FOBfunction2smooth_square_subtract_circle = fob.FOB(function2_smooth_square_subtract_circle, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
+name2smooth_square_subtract_circle = "function2smooth_square_subtract_circle"
+helper.hlp.ps_register_and_list_whole_FOB(FOBfunction2smooth_square_subtract_circle, name2smooth_square_subtract_circle, example2_visuals)
+example2_smooth_square_subtract_circle.append(example2_visuals[len(example2_visuals)-3])
+example2_smooth_square_subtract_circle.append(example2_visuals[len(example2_visuals)-2])
+example2_smooth_square_subtract_circle.append(example2_visuals[len(example2_visuals)-1])
 
+# smooth circle \ square
+FOBfunction2smooth_circle_substract_square = fob.FOB(function2_smooth_circle_substract_square, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
+name2smooth_circle_substract_square = "function2smooth_circle_substract_square"
+helper.hlp.ps_register_and_list_whole_FOB(FOBfunction2smooth_circle_substract_square, name2smooth_circle_substract_square, example2_visuals)
+example2_smooth_circle_substract_square.append(example2_visuals[len(example2_visuals)-3])
+example2_smooth_circle_substract_square.append(example2_visuals[len(example2_visuals)-2])
+example2_smooth_circle_substract_square.append(example2_visuals[len(example2_visuals)-1])
 
 # EXAMPLE BOOLEAN OPERATIONS END
+
+
 
 """
 isocurve1 = ps.register_curve_network("isocurve1", FOBfunction1.isocurve_points, FOBfunction1.isocurve_edges)
@@ -207,7 +249,7 @@ for example in ui_example_options:
         structure.set_enabled(False)
 
 # options for boolean operations example
-ui_boolean_operations = ["None","Union", "Intersection", "Square Complement", "Circle Complement", "Square\Circle", "Circle\Square" ]
+ui_boolean_operations = ["None","Union", "Intersection", "Square Complement", "Circle Complement", "Square\Circle", "Circle\Square", "Smooth Union", "Smooth Intersection", "Smooth Square\Circle", "Smooth Circle\Square" ]
 ui_boolean_operation_selected = ui_boolean_operations[0]
 boolean_op_dict = {
     "None" : [],
@@ -216,7 +258,11 @@ boolean_op_dict = {
     "Square Complement" : example2_complement_square,
     "Circle Complement" : example2_complement_circle,
     "Square\Circle" : example2_square_subtract_circle,
-    "Circle\Square" : example2_circle_subtract_square
+    "Circle\Square" : example2_circle_subtract_square,
+    "Smooth Union" : example2_smooth_union,
+    "Smooth Intersection": example2_smooth_intersection,
+    "Smooth Square\Circle": example2_smooth_square_subtract_circle,
+    "Smooth Circle\Square" : example2_smooth_circle_substract_square
 }
 
 
@@ -263,9 +309,6 @@ def callback():
             if selected:
                 # everything in this if block is only executed once when the example is changed
                 if ui_example_options_selected != example:
-                    print("Changed example to " + example)
-                    print("examplelist1")
-                    print(len(example1_visuals))
                     # change visibility
                     for structure in example_dict[active_example]:
                         structure.set_enabled(False)
@@ -294,7 +337,6 @@ def callback():
                 if selected:
                     # everything in this if block is only executed once when the example is changed
                     if ui_boolean_operation_selected != operation:
-                        print("Changed boolean Operation")
                         for structure in boolean_op_dict[ui_boolean_operation_selected]:
                             structure.set_enabled(False)
                         for structure in boolean_op_dict[operation]:

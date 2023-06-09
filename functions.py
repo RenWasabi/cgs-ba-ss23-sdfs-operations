@@ -62,4 +62,22 @@ def subtract(function_a, function_b):
     subtract = lambda x, y: np.amax([function_a(x,y), complement(function_b)(x, y)])
     return subtract
 
+# Smooth Boolean operations
+# ts: transition size
+def smooth_union(function_a, function_b, ts):
+    # clip == clamp
+    h = lambda x,y: np.clip(0.5+0.5*(function_b(x,y)-function_a(x,y))/ts , 0.0, 1.0)
+    smooth_min = lambda x,y: function_b(x,y)*(1-h(x,y))+function_a(x,y)*h(x,y) + ts*h(x,y)*(1-h(x,y))
+    return smooth_min
+
+def smooth_intersection(function_a, function_b, ts):
+    h = lambda x,y: np.clip(0.5-0.5*(function_b(x,y)-function_a(x,y))/ts , 0.0, 1.0)
+    smooth_max = lambda x,y: function_b(x,y)*(1-h(x,y))+function_a(x,y)*h(x,y) + ts*h(x,y)*(1-h(x,y))
+    return smooth_max
+
+def smooth_subtract(function_a, function_b, ts):
+    h = lambda x,y: np.clip(0.5-0.5*(function_b(x,y)+function_a(x,y))/ts , 0.0, 1.0)
+    smooth_subtract = lambda x,y: function_b(x,y)*(1-h(x,y))-function_a(x,y)*h(x,y) + ts*h(x,y)*(1-h(x,y))
+    return smooth_subtract
+
 
