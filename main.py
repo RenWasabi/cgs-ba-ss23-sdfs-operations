@@ -145,7 +145,7 @@ circle1prim2 = functions.circle_SDF(prim2_x+0.5, prim2_y+0.5,1)
 name2prim2 = "function2prim2"
 create_subexample(name2prim2, example2_visuals, example2_primitives, circle1prim2, isovalue2, prim2_x, prim2_y, sidelength2, resolution2, resolution_step2)
 
-
+# REGULAR
 # union
 name2union = "function2union"
 create_subexample(name2union, example2_visuals, example2_union, function2union, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
@@ -225,9 +225,26 @@ examples_value_meshes.append(example3_visuals[-2])
 examples_isocurves.append(example3_visuals[-3])
 
 
-
-
 # EXAMPLE GENERIC IMPLICIT FUNCTION VS SDF END
+
+
+# EXAMPLE VARIOUS FUNCTIONS START
+example4_visuals = []
+
+example4_n5star = []
+n5star = functions.nstar_SDF(0,0,1.5,9,6)
+name4_n5star = "function4_n5star"
+create_subexample(name4_n5star, example4_visuals, example4_n5star, n5star, 0,0,0,4,0.02,3)
+
+
+
+# EXAMPLE VARIOUS FUNCTIONS END
+
+
+
+
+
+
 
 
 # make all isocurves have the same color
@@ -272,7 +289,8 @@ example_dict = {
     "None" : [],
     "Level Set Methods" : example1_visuals,
     "Boolean Operations" : example2_visuals,
-    "Implicit & SDF" : example3_visuals
+    "Implicit & SDF" : example3_visuals,
+    "Various Functions" : example4_visuals
 }
 
 
@@ -280,7 +298,7 @@ example_dict = {
 ui_text = "some input text"
 
 
-ui_example_options = [ "None", "Level Set Methods", "Boolean Operations", "Implicit & SDF"]
+ui_example_options = [ "None", "Level Set Methods", "Boolean Operations", "Implicit & SDF", "Various Functions"]
 ui_example_options_selected = ui_example_options[0]
 
 # initially, the visibiliy of all structures is disabled
