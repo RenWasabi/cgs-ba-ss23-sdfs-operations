@@ -321,6 +321,15 @@ visibility_dict = {
     "Isocurves" : examples_isocurves
 }
 
+flag_plane = True
+flag_value_mesh = True
+flag_isocurve = True
+visibility_flag_dict = {
+        "Planes" : flag_plane,
+        "Value Meshes" : flag_value_mesh,
+        "Isocurves" : flag_isocurve
+    }
+
 # this will store all structures that are allowed to be shown based on the current example/operation
 # selection, also the ones that are not allowed to be visible due to visibility flags
 allowed_structures = []
@@ -362,8 +371,13 @@ boolean_op_dict = {
     "Smooth Circle\Square" : example2_smooth_circle_substract_square
 }
 
-
-
+# makes the structures belonging from list visible if their type is toggled for visibility
+# differentiates between isocurves, value meshes, planes etc.
+def set_example_visibility(example_list: list):
+    for structure in example_list:
+        for key in visibility_dict.keys():
+            if structure in visibility_dict[key]:
+                structure.set_enabled(visibility_flag_dict[key])
 
 
 def my_function():
@@ -373,9 +387,6 @@ def my_function():
 # Define our callback function, which Polyscope will repeatedly execute while running the UI.
 # We can write any code we want here, but in particular it is an opportunity to create ImGui 
 # interface elements and define a custom UI.
-flag_plane = True
-flag_value_mesh = True
-flag_isocurve = True
 def callback():
 
 
@@ -397,30 +408,15 @@ def callback():
     psim.Separator()
 
 
-    # Checkboxes for visibility of elements
-    psim.TextUnformatted("Show:")
-    # for planes
-    changed, flag_plane = psim.Checkbox("Planes", flag_plane) 
-    if(changed): # optionally, use this conditional to take action on the new value
-        for structure in allowed_structures:
-            if structure in examples_planes:
-                structure.set_enabled(flag_plane)
-    # for value meshes
-    psim.SameLine() 
-    changed, flag_value_mesh = psim.Checkbox("Value Meshes", flag_value_mesh) 
-    if(changed): # optionally, use this conditional to take action on the new value
-        for structure in allowed_structures:
-            if structure in examples_value_meshes:
-                structure.set_enabled(flag_value_mesh)
-    # for isocurves
-    changed, flag_isocurve = psim.Checkbox("Isocurves", flag_isocurve) 
-    if(changed): # optionally, use this conditional to take action on the new value
-        for structure in allowed_structures:
-            if structure in examples_isocurves:
-                structure.set_enabled(flag_isocurve)
-    
+    # Checkboxes for visibility of elements ()
+    for key in visibility_dict.keys():
+        changed, visibility_flag_dict[key] = psim.Checkbox(key, visibility_flag_dict[key])
+        if (changed):
+            for structure in allowed_structures:
+                if structure in visibility_dict[key]:
+                    structure.set_enabled(visibility_flag_dict[key])
+
     psim.Separator()
-        
 
 
 
@@ -440,26 +436,10 @@ def callback():
                         structure.set_enabled(False)
                     # for Boolean operations we still want to select the specific operation to be displayed
                     if example != "Boolean Operations":
-                        for structure in example_dict[example]:
-                            if structure in examples_planes:
-                                structure.set_enabled(flag_plane)
-                            elif structure in examples_value_meshes:
-                                structure.set_enabled(flag_value_mesh)   
-                            elif structure in examples_isocurves:
-                                structure.set_enabled(flag_isocurve)                         
-                            else: 
-                                structure.set_enabled(True)
+                        set_example_visibility(example_dict[example])
                         allowed_structures = example_dict[example]
                     else: # but in Boolean, always show the primitive examples besides the actual operation
-                        for structure in example2_primitives:
-                            if structure in examples_planes:
-                                structure.set_enabled(flag_plane)
-                            elif structure in examples_value_meshes:
-                                structure.set_enabled(flag_value_mesh)
-                            elif structure in examples_isocurves:
-                                structure.set_enabled(flag_isocurve)
-                            else:
-                                structure.set_enabled(True)
+                        set_example_visibility(example2_primitives)
                         allowed_structures = example_dict[example] + example2_primitives # while doing boolean op, these are always allowed
                     active_example = example
                 ui_example_options_selected = example
@@ -481,20 +461,15 @@ def callback():
                     if ui_boolean_operation_selected != operation:
                         for structure in boolean_op_dict[ui_boolean_operation_selected]:
                             structure.set_enabled(False)
-                        for structure in boolean_op_dict[operation]:
-                            if structure in examples_planes:
-                                structure.set_enabled(flag_plane)
-                            elif structure in examples_value_meshes:
-                                structure.set_enabled(flag_value_mesh)
-                            elif structure in examples_isocurves:
-                                structure.set_enabled(flag_isocurve)
-                            else:
-                                structure.set_enabled(True)
+                        set_example_visibility(boolean_op_dict[operation])
                         ui_boolean_operation_selected = operation
                         allowed_structures = boolean_op_dict[operation] + example2_primitives
             psim.EndCombo()
         psim.PopItemWidth()
 
+
+
+                   
 
 
 
