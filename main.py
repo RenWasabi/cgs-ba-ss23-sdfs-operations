@@ -20,18 +20,19 @@ ps.init()
 
 helper.hlp.create_coordinate_axis()
 
-
+# EXAMPLE CASES/SCENES
 
 
 # EXAMPLE LEVEL SETS START
 # stores all the polyscope structures belonging to example 1
-example1_visuals = []
 
+example1_visuals = []
+#"""
 center_x1 = 0
 center_y1 = 0
 sidelength1 = 5
 resolution1 = 0.01
-resolution_step1 = 10
+resolution_step1 = 5
 
 unit_circle_SDF = functions.circle_SDF(center_x1+0,center_y1+0,1)
 shifted_unit_circle_SDF = functions.circle_SDF(center_x1+0.8, center_y1+0.8, 0.8)
@@ -53,6 +54,7 @@ name1c = "function1_c"
 helper.hlp.ps_register_and_list_whole_FOB(FOBfunction1c, name1c, example1_visuals)
 
 # EXAMPLE LEVEL SETS END
+#"""
 
 
 #  EXAMPLE BOOLEAN OPERATIONS START
@@ -69,7 +71,7 @@ example2_smooth_union = []
 example2_smooth_intersection = []
 example2_smooth_square_subtract_circle = []
 example2_smooth_circle_substract_square = []
-
+#"""
 center_x2 = 0
 center_y2 = 0
 sidelength2 = 4
@@ -202,22 +204,36 @@ example2_smooth_circle_substract_square.append(example2_visuals[len(example2_vis
 example2_smooth_circle_substract_square.append(example2_visuals[len(example2_visuals)-1])
 
 # EXAMPLE BOOLEAN OPERATIONS END
+#"""
+
+# EXAMPLE GENERIC IMPLICIT FUNCTION VS SDF START
+
+example3_visuals = []
+
+center_x3 = 0
+center_y3 = 0
+sidelength3 = 7
+resolution3 = 0.05
+resolution_step3 =3
+isovalue3 = 0
+
+implicit_circle = functions.circle_function(center_x3-sidelength3, center_y3, 1)
+SDF_circle = functions.circle_SDF(center_x3+sidelength3, center_y3, 1)
+
+# implicit circle
+FOBfunction3implicit_circle = fob.FOB(implicit_circle, isovalue3, center_x3-sidelength3, center_y3, sidelength3, resolution3, resolution_step3)
+name3implicit_circle = "function3implicit_circle"
+helper.hlp.ps_register_and_list_whole_FOB(FOBfunction3implicit_circle, name3implicit_circle, example3_visuals)
+
+# SDF circle
+FOBfunction3SDF_circle = fob.FOB(SDF_circle, isovalue3, center_x3+sidelength3, center_y3, sidelength3, resolution3, resolution_step3)
+name3SDF_circle = "function3SDF_circle"
+helper.hlp.ps_register_and_list_whole_FOB(FOBfunction3SDF_circle, name3SDF_circle, example3_visuals)
 
 
 
-"""
-isocurve1 = ps.register_curve_network("isocurve1", FOBfunction1.isocurve_points, FOBfunction1.isocurve_edges)
-FOBfunction1.compute_value_visuals()
-value_mesh1 = ps.register_surface_mesh("value_mesh1", FOBfunction1.value_mesh_points, FOBfunction1.value_mesh_faces)
-value_mesh1.add_color_quantity("value_mesh1_colors", FOBfunction1.value_mesh_colors, defined_on='faces', enabled=True)
 
-value_plane1 = ps.register_surface_mesh("value_plane1", FOBfunction1.value_plane_points, FOBfunction1.value_mesh_faces)
-value_plane1.add_color_quantity("value_plane1_colors", FOBfunction1.value_mesh_colors, defined_on='faces', enabled=True)
-                                
-"""
-                                   
-
-
+# EXAMPLE GENERIC IMPLICIT FUNCTION VS SDF END
 
 
 
@@ -232,7 +248,8 @@ active_example = "None"
 example_dict = {
     "None" : [],
     "Level Set Methods" : example1_visuals,
-    "Boolean Operations" : example2_visuals
+    "Boolean Operations" : example2_visuals,
+    "Implicit & SDF" : example3_visuals
 }
 
 
@@ -240,7 +257,7 @@ example_dict = {
 ui_text = "some input text"
 
 
-ui_example_options = [ "None", "Level Set Methods", "Boolean Operations"]
+ui_example_options = [ "None", "Level Set Methods", "Boolean Operations", "Implicit & SDF"]
 ui_example_options_selected = ui_example_options[0]
 
 # initially, the visibiliy of all structures is disabled
