@@ -20,6 +20,23 @@ ps.init()
 
 helper.hlp.create_coordinate_axis()
 
+
+# help for creating examples more compact when there is example/subexample structure
+
+# creates a FOB, registers it with polyscope and adds it to all relevant lists
+# example visuals is e.g. all the visuals for Boolean operations
+# example case groups all the structures (isocurves, meshes, planes...) belonging to
+# one specific case of that example, e.g. intersection as case of Boolean
+def create_subexample(FOBname, example_visuals: list, example_case: list, function, isovalue: float, center_x: float, center_y: float, sidelength:float, resolution: float, resolution_step: int):
+    FOBfunction = fob.FOB(function, isovalue, center_x, center_y, sidelength, resolution, resolution_step)
+    helper.hlp.ps_register_and_list_whole_FOB(FOBfunction, FOBname, example_visuals)
+    example_case.append(example_visuals[-3])
+    example_case.append(example_visuals[-2])
+    example_case.append(example_visuals[-1])
+    examples_planes.append(example_visuals[-1])
+    examples_value_meshes.append(example_visuals[-2])
+    examples_isocurves.append(example_visuals[-3])
+
 # EXAMPLE CASES/SCENES
 # for visibility control of elements -> for several examples:
 # when using register_and_list_whole_FOB, the plane is always the last entry appended to the list
@@ -117,154 +134,60 @@ prim1_x = center_x2 - sidelength2
 prim1_y = center_y2 + sidelength2
 square1prim = functions.rectangle_function(prim1_x-0.3, prim1_y+0, 1, 1)
 circle1prim = functions.circle_SDF(prim1_x+0.5, prim1_y+0.5,1)
-FOBfunction2prim1 = fob.FOB(square1prim, isovalue2, prim1_x, prim1_y, sidelength2, resolution2, resolution_step2)
 name2prim1 = "function2prim1"
-helper.hlp.ps_register_and_list_whole_FOB(FOBfunction2prim1, name2prim1, example2_visuals)
-example2_primitives.append(example2_visuals[len(example2_visuals)-3])
-example2_primitives.append(example2_visuals[len(example2_visuals)-2])
-example2_primitives.append(example2_visuals[len(example2_visuals)-1])
-examples_planes.append(example2_visuals[-1])
-examples_value_meshes.append(example2_visuals[-2])
-examples_isocurves.append(example2_visuals[-3])
-
+create_subexample(name2prim1, example2_visuals, example2_primitives, square1prim, isovalue2, prim1_x, prim1_y, sidelength2, resolution2, resolution_step2)
 
 # right primitive
 prim2_x = center_x2 + sidelength2
 prim2_y = center_y2 + sidelength2
 square1prim = functions.rectangle_function(prim2_x-0.3, prim2_y+0, 1, 1)
 circle1prim2 = functions.circle_SDF(prim2_x+0.5, prim2_y+0.5,1)
-
-FOBfunction2prim2 = fob.FOB(circle1prim2, isovalue2, prim2_x, prim2_y, sidelength2, resolution2, resolution_step2)
 name2prim2 = "function2prim2"
-helper.hlp.ps_register_and_list_whole_FOB(FOBfunction2prim2, name2prim2, example2_visuals)
-example2_primitives.append(example2_visuals[len(example2_visuals)-3])
-example2_primitives.append(example2_visuals[len(example2_visuals)-2])
-example2_primitives.append(example2_visuals[len(example2_visuals)-1])
-examples_planes.append(example2_visuals[-1])
-examples_value_meshes.append(example2_visuals[-2])
-examples_isocurves.append(example2_visuals[-3])
+create_subexample(name2prim2, example2_visuals, example2_primitives, circle1prim2, isovalue2, prim2_x, prim2_y, sidelength2, resolution2, resolution_step2)
+
 
 # union
-FOBfunction2union = fob.FOB(function2union, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
 name2union = "function2union"
-helper.hlp.ps_register_and_list_whole_FOB(FOBfunction2union, name2union, example2_visuals) 
-# the last 3 structures belong to union
-example2_union.append(example2_visuals[len(example2_visuals)-3])
-example2_union.append(example2_visuals[len(example2_visuals)-2])
-example2_union.append(example2_visuals[len(example2_visuals)-1])
-examples_planes.append(example2_visuals[-1])
-examples_value_meshes.append(example2_visuals[-2])
-examples_isocurves.append(example2_visuals[-3])
-
+create_subexample(name2union, example2_visuals, example2_union, function2union, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
 
 # intersection
-FOBfunction2intersection = fob.FOB(function2intersection, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
 name2intersection = "function2intersection"
-helper.hlp.ps_register_and_list_whole_FOB(FOBfunction2intersection, name2intersection, example2_visuals)
-example2_intersection.append(example2_visuals[len(example2_visuals)-3])
-example2_intersection.append(example2_visuals[len(example2_visuals)-2])
-example2_intersection.append(example2_visuals[len(example2_visuals)-1])
-examples_planes.append(example2_visuals[-1])
-examples_value_meshes.append(example2_visuals[-2])
-examples_isocurves.append(example2_visuals[-3])
-
+create_subexample(name2intersection, example2_visuals, example2_intersection,function2intersection, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
 
 # complement of the square
-FOBfunction2complement_square = fob.FOB(function2complement_square, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
 name2complement_square = "function2complement"
-helper.hlp.ps_register_and_list_whole_FOB(FOBfunction2complement_square, name2complement_square, example2_visuals)
-example2_complement_square.append(example2_visuals[len(example2_visuals)-3])
-example2_complement_square.append(example2_visuals[len(example2_visuals)-2])
-example2_complement_square.append(example2_visuals[len(example2_visuals)-1])
-examples_planes.append(example2_visuals[-1])
-examples_value_meshes.append(example2_visuals[-2])
-examples_isocurves.append(example2_visuals[-3])
-
+create_subexample(name2complement_square, example2_visuals, example2_complement_square, function2complement_square, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
 
 # complement of the circle
-FOBfunction2complement_circle = fob.FOB(function2complement_circle, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
 name2complement_circle = "function2complement_circle"
-helper.hlp.ps_register_and_list_whole_FOB(FOBfunction2complement_circle, name2complement_circle, example2_visuals)
-example2_complement_circle .append(example2_visuals[len(example2_visuals)-3])
-example2_complement_circle .append(example2_visuals[len(example2_visuals)-2])
-example2_complement_circle .append(example2_visuals[len(example2_visuals)-1])
-examples_planes.append(example2_visuals[-1])
-examples_value_meshes.append(example2_visuals[-2])
-examples_isocurves.append(example2_visuals[-3])
-
+create_subexample(name2complement_circle, example2_visuals, example2_complement_circle, function2complement_circle, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2 )
 
 # subtract circle from square
-FOBfunction2difference_square = fob.FOB(function2difference_square, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
 name2difference_square = "function2difference_square"
-helper.hlp.ps_register_and_list_whole_FOB(FOBfunction2difference_square, name2difference_square, example2_visuals)
-example2_square_subtract_circle.append(example2_visuals[len(example2_visuals)-3])
-example2_square_subtract_circle.append(example2_visuals[len(example2_visuals)-2])
-example2_square_subtract_circle.append(example2_visuals[len(example2_visuals)-1])
-examples_planes.append(example2_visuals[-1])
-examples_value_meshes.append(example2_visuals[-2])
-examples_isocurves.append(example2_visuals[-3])
-
+create_subexample(name2difference_square, example2_visuals, example2_square_subtract_circle, function2difference_square, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2 )
 
 # subtract square from circle
-FOBfunction2difference_circle = fob.FOB(function2difference_circle, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
 name2difference_circle = "function2difference_circle"
-helper.hlp.ps_register_and_list_whole_FOB(FOBfunction2difference_circle, name2difference_circle, example2_visuals)
-example2_circle_subtract_square.append(example2_visuals[len(example2_visuals)-3])
-example2_circle_subtract_square.append(example2_visuals[len(example2_visuals)-2])
-example2_circle_subtract_square.append(example2_visuals[len(example2_visuals)-1])
-examples_planes.append(example2_visuals[-1])
-examples_value_meshes.append(example2_visuals[-2])
-examples_isocurves.append(example2_visuals[-3])
+create_subexample(name2difference_circle, example2_visuals, example2_circle_subtract_square, function2difference_circle, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
 
 
 # SMOOTH
-
 # smooth union
-FOBfunction2smooth_union = fob.FOB(function2_smooth_union, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
 name2smooth_union = "function2smooth_union"
-helper.hlp.ps_register_and_list_whole_FOB(FOBfunction2smooth_union, name2smooth_union, example2_visuals)
-example2_smooth_union.append(example2_visuals[len(example2_visuals)-3])
-example2_smooth_union.append(example2_visuals[len(example2_visuals)-2])
-example2_smooth_union.append(example2_visuals[len(example2_visuals)-1])
-examples_planes.append(example2_visuals[-1])
-examples_value_meshes.append(example2_visuals[-2])
-examples_isocurves.append(example2_visuals[-3])
-
+create_subexample(name2smooth_union, example2_visuals, example2_smooth_union, function2_smooth_union, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
 
 # smooth intersection
-FOBfunction2smooth_intersection = fob.FOB(function2_smooth_intersection, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
 name2smooth_intersection = "function2smooth_intersection"
-helper.hlp.ps_register_and_list_whole_FOB(FOBfunction2smooth_intersection, name2smooth_intersection, example2_visuals)
-example2_smooth_intersection.append(example2_visuals[len(example2_visuals)-3])
-example2_smooth_intersection.append(example2_visuals[len(example2_visuals)-2])
-example2_smooth_intersection.append(example2_visuals[len(example2_visuals)-1])
-examples_planes.append(example2_visuals[-1])
-examples_value_meshes.append(example2_visuals[-2])
-examples_isocurves.append(example2_visuals[-3])
-
+create_subexample(name2smooth_intersection, example2_visuals, example2_smooth_intersection, function2_smooth_intersection, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
 
 # smooth square \ circle
-FOBfunction2smooth_square_subtract_circle = fob.FOB(function2_smooth_square_subtract_circle, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
 name2smooth_square_subtract_circle = "function2smooth_square_subtract_circle"
-helper.hlp.ps_register_and_list_whole_FOB(FOBfunction2smooth_square_subtract_circle, name2smooth_square_subtract_circle, example2_visuals)
-example2_smooth_square_subtract_circle.append(example2_visuals[len(example2_visuals)-3])
-example2_smooth_square_subtract_circle.append(example2_visuals[len(example2_visuals)-2])
-example2_smooth_square_subtract_circle.append(example2_visuals[len(example2_visuals)-1])
-examples_planes.append(example2_visuals[-1])
-examples_value_meshes.append(example2_visuals[-2])
-examples_isocurves.append(example2_visuals[-3])
-
+create_subexample(name2smooth_square_subtract_circle, example2_visuals, example2_smooth_square_subtract_circle, function2_smooth_square_subtract_circle, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
 
 # smooth circle \ square
-FOBfunction2smooth_circle_substract_square = fob.FOB(function2_smooth_circle_substract_square, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
 name2smooth_circle_substract_square = "function2smooth_circle_substract_square"
-helper.hlp.ps_register_and_list_whole_FOB(FOBfunction2smooth_circle_substract_square, name2smooth_circle_substract_square, example2_visuals)
-example2_smooth_circle_substract_square.append(example2_visuals[len(example2_visuals)-3])
-example2_smooth_circle_substract_square.append(example2_visuals[len(example2_visuals)-2])
-example2_smooth_circle_substract_square.append(example2_visuals[len(example2_visuals)-1])
-examples_planes.append(example2_visuals[-1])
-examples_value_meshes.append(example2_visuals[-2])
-examples_isocurves.append(example2_visuals[-3])
+create_subexample(name2smooth_circle_substract_square, example2_visuals, example2_smooth_circle_substract_square, function2_smooth_circle_substract_square, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2 )
+
 
 
 # EXAMPLE BOOLEAN OPERATIONS END
@@ -319,6 +242,10 @@ for curve in examples_isocurves:
 
 
 ### UI
+
+
+
+
 
 
 
