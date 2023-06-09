@@ -37,7 +37,7 @@ example1_visuals = []
 center_x1 = 0
 center_y1 = 0
 sidelength1 = 5
-resolution1 = 0.1
+resolution1 = 0.05
 resolution_step1 = 10
 
 unit_circle_SDF = functions.circle_SDF(center_x1+0,center_y1+0,1)
@@ -91,7 +91,7 @@ example2_smooth_circle_substract_square = []
 center_x2 = 0
 center_y2 = 0
 sidelength2 = 4
-resolution2 = 0.1
+resolution2 = 0.05
 resolution_step2 = 10
 isovalue2 = 0
 
@@ -277,7 +277,7 @@ example3_visuals = []
 center_x3 = 0
 center_y3 = 0
 sidelength3 = 7
-resolution3 = 0.1
+resolution3 = 0.05
 resolution_step3 = 10
 isovalue3 = 0
 
@@ -307,13 +307,20 @@ examples_isocurves.append(example3_visuals[-3])
 # EXAMPLE GENERIC IMPLICIT FUNCTION VS SDF END
 
 
+# make all isocurves have the same color
+curve_color = ([1,1,0])
+initial_isocurve_radius = 0.07
+for curve in examples_isocurves:
+    curve.set_color(curve_color)
+    curve.set_radius(0.07, relative=False)
+
 
 
 
 
 ### UI
 
-active_example = "None"
+
 
 visibility_dict = {
     "Planes" : examples_planes,
@@ -384,13 +391,16 @@ def my_function():
     # ... do something important here ...
     print("executing function")
 
+opacity_float = 1.0
+isocurve_radius = initial_isocurve_radius
+
 # Define our callback function, which Polyscope will repeatedly execute while running the UI.
 # We can write any code we want here, but in particular it is an opportunity to create ImGui 
 # interface elements and define a custom UI.
 def callback():
 
 
-    global ui_text, ui_example_options, ui_example_options_selected, active_example, ui_boolean_operations, ui_boolean_operation_selected, flag_plane, flag_value_mesh, flag_isocurve, allowed_structures
+    global ui_text, ui_example_options, ui_example_options_selected,ui_boolean_operations, ui_boolean_operation_selected, flag_plane, flag_value_mesh, flag_isocurve, allowed_structures, opacity_float, isocurve_radius
 
 
 
@@ -407,7 +417,17 @@ def callback():
     psim.TextUnformatted("An important value: {}".format(42))
     psim.Separator()
 
+ 
+    changed, isocurve_radius = psim.InputFloat("Isocurve radius", isocurve_radius)
+    if (changed):
+        for curve in examples_isocurves:
+            curve.set_radius(isocurve_radius, relative=False)
 
+    # one opacity slider to rule them all, the new opacity only takes effect after toggling the respective
+    # visibility toggle off and on again
+    changed, opacity_float = psim.SliderFloat("Opacity (takes effect after visibility is toggled)", opacity_float, v_min = 0.0, v_max = 1.0)
+    #psim.Separator()
+    psim.TextUnformatted("Visibility")
     # Checkboxes for visibility of elements ()
     for key in visibility_dict.keys():
         changed, visibility_flag_dict[key] = psim.Checkbox(key, visibility_flag_dict[key])
@@ -415,6 +435,8 @@ def callback():
             for structure in allowed_structures:
                 if structure in visibility_dict[key]:
                     structure.set_enabled(visibility_flag_dict[key])
+                    if (visibility_flag_dict[key]):
+                        structure.set_transparency(opacity_float)
 
     psim.Separator()
 
@@ -432,7 +454,7 @@ def callback():
                 # everything in this if block is only executed once when the example is changed
                 if ui_example_options_selected != example:
                     # change visibility
-                    for structure in example_dict[active_example]:
+                    for structure in example_dict[ui_example_options_selected]:
                         structure.set_enabled(False)
                     # for Boolean operations we still want to select the specific operation to be displayed
                     if example != "Boolean Operations":
@@ -441,14 +463,13 @@ def callback():
                     else: # but in Boolean, always show the primitive examples besides the actual operation
                         set_example_visibility(example2_primitives)
                         allowed_structures = example_dict[example] + example2_primitives # while doing boolean op, these are always allowed
-                    active_example = example
                 ui_example_options_selected = example
         psim.EndCombo()
     psim.PopItemWidth()
 
 
     # Boolean Operations
-    if (active_example == ui_example_options[2]):
+    if (ui_example_options_selected == ui_example_options[2]):
 
         # Choose the Boolean operation
         psim.PushItemWidth(200)
