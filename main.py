@@ -18,7 +18,7 @@ ps.set_up_dir("z_up")
 ps.init()
 
 
-helper.hlp.create_coordinate_axis()
+#helper.hlp.create_coordinate_axis()
 
 
 # help for creating examples more compact when there is example/subexample structure
@@ -229,12 +229,33 @@ examples_isocurves.append(example3_visuals[-3])
 
 
 # EXAMPLE VARIOUS FUNCTIONS START
+center_x4 = 0
+center_y4 = 0
+sidelength4 = 7
+resolution4 = 0.05
+resolution_step4 = 10
+isovalue4 = 0
+
+
 example4_visuals = []
 
+# 3 star
 example4_n5star = []
 n5star = functions.nstar_SDF(0,0,1.5,9,6)
 name4_n5star = "function4_n5star"
-create_subexample(name4_n5star, example4_visuals, example4_n5star, n5star, 0,0,0,4,0.02,3)
+#create_subexample(name4_n5star, example4_visuals, example4_n5star, n5star, 0,0,0,4,0.005,10)
+create_subexample(name4_n5star, example4_visuals, example4_n5star, n5star, isovalue4, center_x4,center_y4,sidelength4,resolution4,resolution_step4)
+
+
+# diamond / cool S
+example4_coolS = []
+coolS = functions.cool_S_SDF(0,0)
+name4_coolS = "function4_coolS"
+create_subexample(name4_coolS, example4_visuals, example4_coolS, coolS, isovalue4, center_x4,center_y4,sidelength4,resolution4,resolution_step4 )
+
+
+
+
 
 
 
@@ -323,6 +344,14 @@ boolean_op_dict = {
     "Smooth Circle\Square" : example2_smooth_circle_substract_square
 }
 
+ui_various_shapes = ["None", "3-Star", "Diamond"]
+ui_various_shapes_selected = ui_various_shapes[0]
+various_shape_dict = {
+    "None": [],
+    "3-Star" : example4_n5star, 
+    "Diamond" : example4_coolS
+}
+
 # makes the structures belonging from list visible if their type is toggled for visibility
 # differentiates between isocurves, value meshes, planes etc.
 def set_example_visibility(example_list: list):
@@ -345,7 +374,7 @@ isocurve_radius = initial_isocurve_radius
 def callback():
 
 
-    global ui_text, ui_example_options, ui_example_options_selected,ui_boolean_operations, ui_boolean_operation_selected, flag_plane, flag_value_mesh, flag_isocurve, allowed_structures, opacity_float, isocurve_radius
+    global ui_text, ui_example_options, ui_example_options_selected,ui_boolean_operations, ui_boolean_operation_selected, flag_plane, flag_value_mesh, flag_isocurve, allowed_structures, opacity_float, isocurve_radius, ui_various_shapes, ui_various_shapes_selected
 
 
 
@@ -432,6 +461,28 @@ def callback():
                         allowed_structures = boolean_op_dict[operation] + example2_primitives
             psim.EndCombo()
         psim.PopItemWidth()
+
+
+    # Various Shapes
+    if (ui_example_options_selected == ui_example_options[4]):
+        # Choose the shape
+        psim.PushItemWidth(200)
+        changed = psim.BeginCombo("Choose shape", ui_various_shapes_selected)
+        if changed:
+            for shape in ui_various_shapes:
+                _, selected = psim.Selectable(shape, ui_various_shapes_selected==shape)
+                if selected:
+                    # everything in this if block is only executed once when the example is changed
+                    if ui_various_shapes_selected != shape:
+                        for structure in various_shape_dict[ui_various_shapes_selected]:
+                            structure.set_enabled(False)
+                        set_example_visibility(various_shape_dict[shape])
+                        ui_various_shapes_selected = shape
+                        allowed_structures = various_shape_dict[shape]
+            psim.EndCombo()
+        psim.PopItemWidth()
+
+
 
 
 

@@ -21,7 +21,7 @@ def rectangle_function(center_x: float, center_y: float, length: float, height: 
     rectangle = lambda x,y: np.linalg.norm(np.maximum(np.abs(np.asarray([(x-center_x),(y-center_y)]))-np.asarray([length, height]), np.asarray([0,0]))) + np.amin(np.max(np.abs(np.asarray([(x-center_x),(y-center_y)])) - np.asarray([length, height])),0)
     return rectangle
 
-# m in [2,n]
+# m in [2,n] # not yet working properly, always produces 3-star, at center 0,0
 def nstar_SDF(center_x: float, center_y: float, radius: float, n: float, m: float):
     # fixed (independent from x,y)
     an = np.pi/np.float64(n)
@@ -35,6 +35,39 @@ def nstar_SDF(center_x: float, center_y: float, radius: float, n: float, m: floa
     p_3 = lambda x,y: p_2(x,y) + ecs * np.clip(-np.dot(p_2(x,y),ecs), 0.0, radius*acs[1]/ecs[1])
     function = lambda x,y: np.linalg.norm(p_3(x,y))*np.sign(p_3(x,y)[0])
     return function
+
+
+# no shift of center away from 0,0 yet
+def cool_S_SDF(center_x: float, center_y: float):
+
+    # symmetries: six, rex, aby
+    # six(x,y) = -x if y < 0, x else
+    six = lambda x,y: np.sign(y)*x + np.clip( np.floor(1-np.abs(y)), 0, 1) * x
+    rex = lambda x: np.abs(x) - np.amin( [np.round(np.abs(x)/0.4), 0.4])
+    aby = lambda y: np.abs( np.abs(y) - 0.2) - 0.6
+
+    # 3 line segments are enough -> choose d as the minimum of d[i]b , i = 1,2,3
+    d1a = lambda x,y: np.asarray([six(x,y), -np.abs(y)]) - np.asarray([np.clip(0.5*(six(x,y) - np.abs(y)), 0.0, 0.2), np.clip(0.5*(six(x,y) - np.abs(y)), 0.0, 0.2)])
+    d1b = lambda x,y: np.dot(d1a(x,y), d1a(x,y))
+
+    d2a = lambda x,y: np.asarray([np.abs(x), -aby(y)]) - np.asarray([ np.clip(0.5*(six(x,y)-np.abs(y)), 0.0, 0.4), np.clip(0.5*(six(x,y)-np.abs(y)), 0.0, 0.4)])
+    d2b = lambda x,y: np.dot(d2a(x,y), d2a(x,y))
+    d2c = lambda x,y: np.amin([d1b(x,y), d2b(x,y)])
+
+    d3a = lambda x,y: np.asarray([rex(x), np.abs(y)]) - np.asarray([np.clip(np.abs(y), 0.0, 0.4), np.clip(np.abs(y), 0.0, 0.4)])
+    d3b = lambda x,y: np.dot(d3a(x,y), d3a(x,y))
+    d3c = lambda x,y: np.amin([d2c(x,y), d3b(x,y)])
+
+    # interior vs exterior
+    s = lambda x,y: 2*np.abs(x) + aby(y) + np.abs(aby(y)+0.4) - 0.4
+
+    function = lambda x,y: np.sqrt(d3c(x,y)) * np.sign(s(x,y))
+    return function
+
+
+
+
+    
 
 ### general implicit or unclear whether SDF
 
