@@ -65,7 +65,8 @@ class FOB:
     def compute_value_visuals(self):
         # visualizing functions as curve network or mesh
         self.value_mesh_points, self.value_mesh_edges, self.value_mesh_faces = func_visual.function_visualization.create_value_points_edges_mesh(self.resolution_step, self.evaluation_grid)     
-        self.value_mesh_colors = func_visual.function_visualization.create_mesh_colors(self.value_mesh_faces, self.value_mesh_points, self.isovalue)
+        #self.value_mesh_colors = func_visual.function_visualization.create_mesh_colors(self.value_mesh_faces, self.value_mesh_points, self.isovalue)
+        self.value_mesh_colors = func_visual.function_visualization.create_mesh_colors_gradient(self.value_mesh_faces, self.value_mesh_points, self.isovalue)
 
         # create a colored mesh plane that is the value mesh, squashed to a flat plane at the height of isovalue
         self.value_plane_points = np.ndarray(self.value_mesh_points.shape)

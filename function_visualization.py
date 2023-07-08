@@ -73,7 +73,7 @@ class function_visualization:
     # returns an np.ndarray that assigns a color to each face, can be used with 
     # polyscope's mesh.add_color_quantity(...)
     @staticmethod
-    def create_mesh_colors(value_mesh_faces: np.ndarray, value_mesh_points: np.ndarray) -> np.ndarray:
+    def create_mesh_colors(value_mesh_faces: np.ndarray, value_mesh_points: np.ndarray, isovalue: float) -> np.ndarray:
         # coloring the mesh
         # majority of point values determines color
         # ideally with LERP
@@ -86,7 +86,7 @@ class function_visualization:
             for vertice in range(3):
                 this_vertice = value_mesh_faces[face,vertice]
                 this_value = value_mesh_points[np.int64(this_vertice),2]
-                if this_value > 0:
+                if this_value > isovalue:
                     positive_vertices += 1
             if positive_vertices >= 2:
                 # color face red
@@ -95,6 +95,48 @@ class function_visualization:
                 # color face blue
                 value_mesh_colors[face] = blue
         return value_mesh_colors
+    
+
+    @staticmethod
+    def create_mesh_colors_gradient(value_mesh_faces: np.ndarray, value_mesh_points: np.ndarray, isovalue: float) -> np.ndarray:
+        # coloring the mesh
+        # majority of point values determines color
+        # ideally with LERP
+        number_of_faces = value_mesh_faces.shape[0]
+        value_mesh_colors = np.ndarray((number_of_faces,3))
+        blue = np.asarray([0,0,1])
+        red = np.asarray([1,0,0])
+        max_average = 0
+        min_average = 0
+        for face in range (number_of_faces):
+            value_sum = 0
+            for vertice in range(3):
+                this_vertice = value_mesh_faces[face,vertice]
+                this_value = value_mesh_points[np.int64(this_vertice),2]
+                value_sum += this_value
+            av_value = value_sum / 3
+            value_mesh_colors[face] = np.asarray([av_value,0,0]) 
+            if av_value > max_average:
+                max_average = av_value
+            if av_value < min_average:
+                min_average = av_value
+        # scale value between 0, 1 according to highest and lowest value
+        # scale [min_average, max_average] linearly to [0,1]
+        val_range = np.abs(max_average-min_average)
+        # normalize, create correct color values
+        for face in range(number_of_faces):
+            # minimum at 0
+            value_mesh_colors[face,0] = value_mesh_colors[face,0] - min_average
+            if value_mesh_colors[face,0] < 0:
+                value_mesh_colors[face,0] = 0 # prevent errors due to small numeric derivations
+            # normalize to highest value 1, the amin just to be sure that its not slightly above 1
+            value_mesh_colors[face,0] = np.amin([value_mesh_colors[face,0]/val_range, 1])
+            # set blue value complementary
+            value_mesh_colors[face,2] = 1-value_mesh_colors[face,0]
+            
+        return value_mesh_colors
+
+
 
 
 """
