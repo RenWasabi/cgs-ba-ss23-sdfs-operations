@@ -19,6 +19,15 @@ ps.init()
 
 
 #helper.hlp.create_coordinate_axis()
+center_point = np.asarray([[0,0,0]])
+ps_coordinates = ps.register_point_cloud("center point", center_point, enabled=False)
+axis_len = 20
+x_vector = np.asarray([[axis_len,0,0]])
+y_vector = np.asarray([[0,axis_len, 0]])
+z_vector = np.asarray([[0,0,axis_len]])
+ps_coordinates.add_vector_quantity("x_vector", x_vector, radius=0.001, color=(1,0,0), vectortype="ambient", enabled=True)
+ps_coordinates.add_vector_quantity("y_vector", y_vector, radius=0.001, color=(0,1,0), vectortype="ambient", enabled=True)
+ps_coordinates.add_vector_quantity("z_vector", z_vector, radius=0.001, color=(0,0,1), vectortype="ambient", enabled=True)
 
 
 # help for creating examples more compact when there is example/subexample structure
@@ -53,12 +62,12 @@ example1_visuals = []
 #"""
 center_x1 = 0
 center_y1 = 0
-sidelength1 = 5
-resolution1 = 0.05
-resolution_step1 = 10
+sidelength1 = 8
+resolution1 = 0.1
+resolution_step1 = 5
 
-unit_circle_SDF = functions.circle_SDF(center_x1+0,center_y1+0,1)
-shifted_unit_circle_SDF = functions.circle_SDF(center_x1+0.8, center_y1+0.8, 0.8)
+unit_circle_SDF = functions.circle_SDF(center_x1+0,center_y1+0,1) # good radius: 1
+shifted_unit_circle_SDF = functions.circle_SDF(center_x1+0.8, center_y1+0.8, 0.8) # good radius: 0.8
 function1 = functions.union(unit_circle_SDF, shifted_unit_circle_SDF)
 
 
@@ -108,8 +117,8 @@ example2_smooth_circle_substract_square = []
 center_x2 = 0
 center_y2 = 0
 sidelength2 = 4
-resolution2 = 0.05
-resolution_step2 = 10
+resolution2 = 0.1
+resolution_step2 = 5
 isovalue2 = 0
 
 square1 = functions.rectangle_function(center_x2-0.3, center_y2+0, 1, 1)
@@ -200,8 +209,8 @@ example3_visuals = []
 center_x3 = 0
 center_y3 = 0
 sidelength3 = 7
-resolution3 = 0.05
-resolution_step3 = 10
+resolution3 = 0.01
+resolution_step3 = 1
 isovalue3 = 0
 
 implicit_circle = functions.circle_function(center_x3-sidelength3, center_y3, 1)
@@ -231,9 +240,9 @@ examples_isocurves.append(example3_visuals[-3])
 # EXAMPLE VARIOUS FUNCTIONS START
 center_x4 = 0
 center_y4 = 0
-sidelength4 = 7
-resolution4 = 0.05
-resolution_step4 = 10
+sidelength4 = 5
+resolution4 = 0.1
+resolution_step4 = 5
 isovalue4 = 0
 
 
@@ -249,10 +258,28 @@ create_subexample(name4_n5star, example4_visuals, example4_n5star, n5star, isova
 
 # diamond / cool S
 example4_coolS = []
-coolS = functions.cool_S_SDF(0,0)
+coolS = functions.cool_S_SDF(1,1)
 name4_coolS = "function4_coolS"
 create_subexample(name4_coolS, example4_visuals, example4_coolS, coolS, isovalue4, center_x4,center_y4,sidelength4,resolution4,resolution_step4 )
 
+
+# regular Polygon
+example4_batman = []
+batman = functions.regular_polygon_distance(6)
+name4_batman = "function4_batman"
+create_subexample(name4_batman, example4_visuals, example4_batman, batman, isovalue4, center_x4,center_y4,sidelength4,resolution4,resolution_step4 )
+
+# smile
+example4_smile = []
+name4_smile = "function4_smile"
+mouth = functions.subtract(functions.circle_SDF(0,-0.6, 1), functions.circle_SDF(0,-0.3, 1))
+left_eye = functions.subtract(functions.cool_S_SDF(-0.9,0.6), functions.rectangle_function(-0.8,0.6, 0.1, 0.3))
+right_eye = functions.subtract(functions.cool_S_SDF(0.9,0.6), functions.rectangle_function(1,0.6, 0.1, 0.3))
+eyes = functions.union(left_eye, right_eye)
+facial_features = functions.union(eyes, mouth)
+face = functions.subtract(functions.circle_SDF(0,0,2.1), facial_features)
+create_subexample(name4_smile, example4_visuals, example4_smile, face, isovalue4, center_x4, center_y4, sidelength4, resolution4, resolution_step4)
+#
 
 
 
@@ -344,12 +371,14 @@ boolean_op_dict = {
     "Smooth Circle\Square" : example2_smooth_circle_substract_square
 }
 
-ui_various_shapes = ["None", "3-Star", "Diamond"]
+ui_various_shapes = ["None", "3-Star", "Diamond", "Batman", "Smile"]
 ui_various_shapes_selected = ui_various_shapes[0]
 various_shape_dict = {
     "None": [],
     "3-Star" : example4_n5star, 
-    "Diamond" : example4_coolS
+    "Diamond" : example4_coolS,
+    "Batman": example4_batman,
+    "Smile" : example4_smile
 }
 
 # makes the structures belonging from list visible if their type is toggled for visibility

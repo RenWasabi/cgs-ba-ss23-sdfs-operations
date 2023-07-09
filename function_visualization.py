@@ -121,18 +121,24 @@ class function_visualization:
             if av_value < min_average:
                 min_average = av_value
         # scale value between 0, 1 according to highest and lowest value
-        # scale [min_average, max_average] linearly to [0,1]
-        val_range = np.abs(max_average-min_average)
+        # make sure middle is at value 0 -> split according to values above and below, then scale each linearly
+        val_range_pos = np.amax([max_average, 0])
+        val_range_neg = np.abs(min_average)
         # normalize, create correct color values
         for face in range(number_of_faces):
-            # minimum at 0
-            value_mesh_colors[face,0] = value_mesh_colors[face,0] - min_average
-            if value_mesh_colors[face,0] < 0:
-                value_mesh_colors[face,0] = 0 # prevent errors due to small numeric derivations
-            # normalize to highest value 1, the amin just to be sure that its not slightly above 1
-            value_mesh_colors[face,0] = np.amin([value_mesh_colors[face,0]/val_range, 1])
-            # set blue value complementary
+            value = value_mesh_colors[face,0]
+            if value >= 0:
+                if val_range_pos is not 0:
+                    # if value = max then 1, else between 0.5 and 1
+                    value_mesh_colors[face,0] = np.amin([0.5 + value_mesh_colors[face,0] /val_range_pos*2, 1])
+                # else value must be 0 => no scaling needed
+            else:
+                if val_range_neg is not 0:
+                    value_mesh_colors[face,0] = np.max([0.5+value_mesh_colors[face,0] /val_range_neg*2, 0])
+
             value_mesh_colors[face,2] = 1-value_mesh_colors[face,0]
+            # making it light in the middle looks better
+            value_mesh_colors[face,1] = (1-np.amax([value_mesh_colors[face]]))/2
             
         return value_mesh_colors
 
