@@ -19,15 +19,16 @@ ps.init()
 
 
 #helper.hlp.create_coordinate_axis()
-center_point = np.asarray([[0,0,0]])
-ps_coordinates = ps.register_point_cloud("center point", center_point, enabled=False)
+center_point = np.asarray([[-7,-7,0]])
+ps_coordinates = ps.register_point_cloud("center point", center_point, enabled=True, radius=0.0001)
 axis_len = 20
 x_vector = np.asarray([[axis_len,0,0]])
 y_vector = np.asarray([[0,axis_len, 0]])
 z_vector = np.asarray([[0,0,axis_len]])
-ps_coordinates.add_vector_quantity("x_vector", x_vector, radius=0.001, color=(1,0,0), vectortype="ambient", enabled=True)
-ps_coordinates.add_vector_quantity("y_vector", y_vector, radius=0.001, color=(0,1,0), vectortype="ambient", enabled=True)
-ps_coordinates.add_vector_quantity("z_vector", z_vector, radius=0.001, color=(0,0,1), vectortype="ambient", enabled=True)
+axis_radius = 0.01
+ps_coordinates.add_vector_quantity("x_vector", x_vector, axis_radius, color=(1,0,0), vectortype="ambient")
+ps_coordinates.add_vector_quantity("y_vector", y_vector, axis_radius, color=(0,1,0), vectortype="ambient")
+ps_coordinates.add_vector_quantity("z_vector", z_vector, axis_radius, color=(0,0,1), vectortype="ambient")
 
 
 # help for creating examples more compact when there is example/subexample structure
@@ -63,8 +64,8 @@ example1_visuals = []
 center_x1 = 0
 center_y1 = 0
 sidelength1 = 8
-resolution1 = 0.1
-resolution_step1 = 5
+resolution1 = 0.01
+resolution_step1 = 1
 
 unit_circle_SDF = functions.circle_SDF(center_x1+0,center_y1+0,1) # good radius: 1
 shifted_unit_circle_SDF = functions.circle_SDF(center_x1+0.8, center_y1+0.8, 0.8) # good radius: 0.8
@@ -209,7 +210,7 @@ example3_visuals = []
 center_x3 = 0
 center_y3 = 0
 sidelength3 = 7
-resolution3 = 0.01
+resolution3 = 0.1
 resolution_step3 = 1
 isovalue3 = 0
 
