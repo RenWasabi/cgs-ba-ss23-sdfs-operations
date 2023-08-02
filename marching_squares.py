@@ -29,6 +29,16 @@ class MS_Grid:
             for j in range(self.vertices.shape[1]):
                 # value at i, j      = function evaluated at x, y coordinates belonging to i,j
                 self.vertices[i,j,2] = self.function(self.vertices[i,j,0], self.vertices[i,j,1])
+        """
+        processes = []
+        for i in range(self.shape[0]):
+            for j in range(self.shape[1]):
+                new_process = Process(target=self.cut_square, args=(i,j,))
+                processes.append(new_process)
+        for process in processes:
+            process.run()
+        """
+      
 
 
     # functions for retrieving the four vertices of a specified square
@@ -193,7 +203,6 @@ class MS_Grid:
 
         
 
-        #print(cut_edge_list)
     
         
         
@@ -202,6 +211,9 @@ class Square_Info:
     intersection_points = None # numpy array of [[x_0, y_0] ...]
     intersection = np.zeros(1)   # numpy array, indices of the intersection vertices to be connected by an edge
     
+
+
+
 
     
 

@@ -51,3 +51,4 @@ class hlp:
         z_axis_edges = np.array([[0,1]])
         z_axis_curve = ps.register_curve_network("z_axis", z_axis_nodes, z_axis_edges)
                                    
+

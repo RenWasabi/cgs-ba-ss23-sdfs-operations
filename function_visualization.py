@@ -130,11 +130,11 @@ class function_visualization:
             if value >= 0:
                 if val_range_pos != 0:
                     # if value = max then 1, else between 0.5 and 1
-                    value_mesh_colors[face,0] = np.amin([value_mesh_colors[face,0] /val_range_pos*2, 1])
+                    value_mesh_colors[face,0] = np.amin([0.5+value_mesh_colors[face,0] /val_range_pos*2, 1])
                 # else value must be 0 => no scaling needed
             else:
                 if val_range_neg != 0:
-                    value_mesh_colors[face,0] = np.max([0.5+value_mesh_colors[face,0] /val_range_neg*2, 0])
+                    value_mesh_colors[face,0] = np.max([1-np.abs(value_mesh_colors[face,0]) /val_range_neg-0.45, 0])
 
             value_mesh_colors[face,2] = 1-value_mesh_colors[face,0]
             # making it light in the middle looks better

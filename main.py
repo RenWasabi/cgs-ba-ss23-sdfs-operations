@@ -19,7 +19,10 @@ ps.init()
 
 
 #helper.hlp.create_coordinate_axis()
-center_point = np.asarray([[-7,-7,0]])
+ 
+#center_point = np.asarray([[-7,-7,0]]) # level sets
+#center_point = np.asarray([[-11,-7,0]]) # implicit vs SDF
+center_point = np.asarray([[-3,-3,0]]) # Boolean Operations
 ps_coordinates = ps.register_point_cloud("center point", center_point, enabled=True, radius=0.0001)
 axis_len = 20
 x_vector = np.asarray([[axis_len,0,0]])
@@ -64,12 +67,13 @@ example1_visuals = []
 center_x1 = 0
 center_y1 = 0
 sidelength1 = 8
-resolution1 = 0.01
-resolution_step1 = 1
+resolution1 = 0.1
+resolution_step1 = 3
 
 unit_circle_SDF = functions.circle_SDF(center_x1+0,center_y1+0,1) # good radius: 1
 shifted_unit_circle_SDF = functions.circle_SDF(center_x1+0.8, center_y1+0.8, 0.8) # good radius: 0.8
-function1 = functions.union(unit_circle_SDF, shifted_unit_circle_SDF)
+#function1 = functions.union(unit_circle_SDF, shifted_unit_circle_SDF)
+function1 = functions.rectangle_function(0,0,0.6,0.6)
 
 
 
@@ -82,16 +86,24 @@ examples_value_meshes.append(example1_visuals[-2])
 examples_isocurves.append(example1_visuals[-3])
 
 # isovalue -0.5
-FOBfunction1b = fob.FOB(function1, -0.5, center_x1, center_y1, sidelength1, resolution1, resolution_step1)
+FOBfunction1b = fob.FOB(function1, 2, center_x1, center_y1, sidelength1, resolution1, resolution_step1)
 name1b = "function1_b"
 helper.hlp.ps_register_and_list_whole_FOB(FOBfunction1b, name1b, example1_visuals)
 examples_planes.append(example1_visuals[-1])
 examples_value_meshes.append(example1_visuals[-2])
 examples_isocurves.append(example1_visuals[-3])
 # isovalue 0.5
-FOBfunction1c = fob.FOB(function1, 0.5, center_x1, center_y1, sidelength1, resolution1, resolution_step1)
+FOBfunction1c = fob.FOB(function1, 4, center_x1, center_y1, sidelength1, resolution1, resolution_step1)
 name1c = "function1_c"
 helper.hlp.ps_register_and_list_whole_FOB(FOBfunction1c, name1c, example1_visuals)
+examples_planes.append(example1_visuals[-1])
+examples_value_meshes.append(example1_visuals[-2])
+examples_isocurves.append(example1_visuals[-3])
+
+# isovalue 0.5
+FOBfunction1d = fob.FOB(function1, 6, center_x1, center_y1, sidelength1, resolution1, resolution_step1)
+name1d = "function1_d"
+helper.hlp.ps_register_and_list_whole_FOB(FOBfunction1d, name1d, example1_visuals)
 examples_planes.append(example1_visuals[-1])
 examples_value_meshes.append(example1_visuals[-2])
 examples_isocurves.append(example1_visuals[-3])
@@ -118,8 +130,8 @@ example2_smooth_circle_substract_square = []
 center_x2 = 0
 center_y2 = 0
 sidelength2 = 4
-resolution2 = 0.1
-resolution_step2 = 5
+resolution2 = 0.01
+resolution_step2 = 3
 isovalue2 = 0
 
 square1 = functions.rectangle_function(center_x2-0.3, center_y2+0, 1, 1)
@@ -142,61 +154,69 @@ function2_smooth_circle_substract_square = functions.smooth_subtract(square1, ci
 # left primitive
 prim1_x = center_x2 - sidelength2
 prim1_y = center_y2 + sidelength2
-square1prim = functions.rectangle_function(prim1_x-0.3, prim1_y+0, 1, 1)
-circle1prim = functions.circle_SDF(prim1_x+0.5, prim1_y+0.5,1)
+#square1prim = functions.rectangle_function(prim1_x-0.3, prim1_y+0, 1, 1)
+#circle1prim = functions.circle_SDF(prim1_x+0.5, prim1_y+0.5,1)
+square1prim = functions.rectangle_function(center_x2-0.3, center_y2+0, 1, 1)
+circle1prim = functions.circle_SDF(center_x2+0.5, center_y2+0.5,1)
 name2prim1 = "function2prim1"
-create_subexample(name2prim1, example2_visuals, example2_primitives, square1prim, isovalue2, prim1_x, prim1_y, sidelength2, resolution2, resolution_step2)
+#create_subexample(name2prim1, example2_visuals, example2_primitives, square1prim, isovalue2, prim1_x, prim1_y, sidelength2, resolution2, resolution_step2)
+#create_subexample(name2prim1, example2_visuals, example2_primitives, square1prim, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
+
 
 # right primitive
 prim2_x = center_x2 + sidelength2
 prim2_y = center_y2 + sidelength2
-square1prim = functions.rectangle_function(prim2_x-0.3, prim2_y+0, 1, 1)
-circle1prim2 = functions.circle_SDF(prim2_x+0.5, prim2_y+0.5,1)
+#square1prim = functions.rectangle_function(prim2_x-0.3, prim2_y+0, 1, 1)
+#circle1prim2 = functions.circle_SDF(prim2_x+0.5, prim2_y+0.5,1)
+circle1prim2 = functions.circle_SDF(center_x2+0.5, center_y2+0.5,1)
+
 name2prim2 = "function2prim2"
-create_subexample(name2prim2, example2_visuals, example2_primitives, circle1prim2, isovalue2, prim2_x, prim2_y, sidelength2, resolution2, resolution_step2)
+#create_subexample(name2prim2, example2_visuals, example2_primitives, circle1prim2, isovalue2, prim2_x, prim2_y, sidelength2, resolution2, resolution_step2)
+create_subexample(name2prim2, example2_visuals, example2_primitives, circle1prim2, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
+
 
 # REGULAR
 # union
 name2union = "function2union"
-create_subexample(name2union, example2_visuals, example2_union, function2union, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
+#create_subexample(name2union, example2_visuals, example2_union, function2union, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
 
 # intersection
 name2intersection = "function2intersection"
-create_subexample(name2intersection, example2_visuals, example2_intersection,function2intersection, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
+#create_subexample(name2intersection, example2_visuals, example2_intersection,function2intersection, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
 
 # complement of the square
 name2complement_square = "function2complement"
-create_subexample(name2complement_square, example2_visuals, example2_complement_square, function2complement_square, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
+#create_subexample(name2complement_square, example2_visuals, example2_complement_square, function2complement_square, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
 
 # complement of the circle
 name2complement_circle = "function2complement_circle"
-create_subexample(name2complement_circle, example2_visuals, example2_complement_circle, function2complement_circle, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2 )
+#create_subexample(name2complement_circle, example2_visuals, example2_complement_circle, function2complement_circle, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2 )
 
 # subtract circle from square
 name2difference_square = "function2difference_square"
-create_subexample(name2difference_square, example2_visuals, example2_square_subtract_circle, function2difference_square, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2 )
+#create_subexample(name2difference_square, example2_visuals, example2_square_subtract_circle, function2difference_square, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2 )
 
 # subtract square from circle
 name2difference_circle = "function2difference_circle"
-create_subexample(name2difference_circle, example2_visuals, example2_circle_subtract_square, function2difference_circle, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
+#create_subexample(name2difference_circle, example2_visuals, example2_circle_subtract_square, function2difference_circle, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
 
 
 # SMOOTH
 # smooth union
 name2smooth_union = "function2smooth_union"
-create_subexample(name2smooth_union, example2_visuals, example2_smooth_union, function2_smooth_union, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
+#create_subexample(name2smooth_union, example2_visuals, example2_smooth_union, function2_smooth_union, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
 
 # smooth intersection
 name2smooth_intersection = "function2smooth_intersection"
-create_subexample(name2smooth_intersection, example2_visuals, example2_smooth_intersection, function2_smooth_intersection, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
+#create_subexample(name2smooth_intersection, example2_visuals, example2_smooth_intersection, function2_smooth_intersection, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
 
 # smooth square \ circle
 name2smooth_square_subtract_circle = "function2smooth_square_subtract_circle"
-create_subexample(name2smooth_square_subtract_circle, example2_visuals, example2_smooth_square_subtract_circle, function2_smooth_square_subtract_circle, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
+#create_subexample(name2smooth_square_subtract_circle, example2_visuals, example2_smooth_square_subtract_circle, function2_smooth_square_subtract_circle, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2)
 
 # smooth circle \ square
 name2smooth_circle_substract_square = "function2smooth_circle_substract_square"
-create_subexample(name2smooth_circle_substract_square, example2_visuals, example2_smooth_circle_substract_square, function2_smooth_circle_substract_square, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2 )
+#create_subexample(name2smooth_circle_substract_square, example2_visuals, example2_smooth_circle_substract_square, function2_smooth_circle_substract_square, isovalue2, center_x2, center_y2, sidelength2, resolution2, resolution_step2 )
 
 
 
@@ -211,7 +231,7 @@ center_x3 = 0
 center_y3 = 0
 sidelength3 = 7
 resolution3 = 0.1
-resolution_step3 = 1
+resolution_step3 = 3
 isovalue3 = 0
 
 implicit_circle = functions.circle_function(center_x3-sidelength3, center_y3, 1)
@@ -243,7 +263,7 @@ center_x4 = 0
 center_y4 = 0
 sidelength4 = 5
 resolution4 = 0.1
-resolution_step4 = 5
+resolution_step4 = 3
 isovalue4 = 0
 
 

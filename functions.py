@@ -39,7 +39,7 @@ def nstar_SDF(center_x: float, center_y: float, radius: float, n: float, m: floa
 
 # no shift of center away from 0,0 yet
 def cool_S_SDF(center_x: float, center_y: float):
-
+   
     # symmetries: six, rex, aby
     # six(x,y) = -x if y < 0, x else
     six = lambda x,y: np.sign(y)*x + np.clip( np.floor(1-np.abs(y)), 0, 1) * x
@@ -61,7 +61,7 @@ def cool_S_SDF(center_x: float, center_y: float):
     # interior vs exterior
     s = lambda x,y: 2*np.abs(x) + aby(y) + np.abs(aby(y)+0.4) - 0.4
 
-    function = lambda x,y: np.sqrt(d3c(x,y)) * np.sign(s(x,y))
+    function = lambda x,y: np.sqrt(d3c((x-center_x),(y-center_y))) * np.sign(s((x-center_x),(y-center_y)))
     return function
 
 
@@ -77,11 +77,47 @@ def circle_function(center_x: float, center_y: float, radius: float):
     circle = lambda x, y: (x - center_x)**2 + (y - center_y)**2 - radius**2
     return circle
 
-def batman(x: float, y: float): 
-    factor1 = (x/7)**2 * np.sqrt((np.abs(np.abs(x)-3)) / (np.abs(x)-3)) + (y/3)**2 * np.sqrt(  (np.abs(y + 3*np.sqrt(33)/7)/ (y + 3* np.sqrt(33)/7)))-1
-    factor2 = np.abs(x/2) - (3*np.sqrt(33) - 7)/122 * x**2 - 3 + np.sqrt((1- np.abs(np.abs(x)-2)-1)**2)-y
-    # still missing terms
-    return factor1*factor2
+# not working
+def batman_function():
+    def batman(x: float, y: float): 
+        factor1 = (x/7)**2 * np.sqrt((np.abs(np.abs(x)-3)) / (np.abs(x)-3)) + (y/3)**2 * np.sqrt(  (np.abs(y + 3*np.sqrt(33)/7)/ (y + 3* np.sqrt(33)/7)))-1
+        factor2 = np.abs(x/2) - (3*np.sqrt(33) - 7)/122 * x**2 - 3 + np.sqrt((1- np.abs(np.abs(x)-2)-1)**2)-y
+        # ok till here I think
+        factor3 = 9 * np.sqrt(np.abs((np.abs(x)-1) * (np.abs(x)-0.5))/ (1-np.abs(x)*(np.abs(x)-0.75))) - 8*np.abs(x) - y
+        factor4 = 3*np.abs(x) + 0.75*np.sqrt( np.abs((np.abs(x)-0.75)* (np.abs(x)-0.5))/(0.75-np.abs(x))*(np.abs(x)-0.5)) - y
+        factor5 = 2.25*np.sqrt( np.abs((x-0.5)*(x+0.5))/(0.5-x)*(0.5+x)) - y
+        factor6 = (6*np.sqrt(10)/7) + (1.5-0.5*np.abs(x)) * np.sqrt( np.abs(np.abs(x)-1)/ (np.abs(x)-1)) - (6*np.sqrt(10)/14) * np.sqrt(4-(np.abs(x)-1)**2) - y
+        #
+        return factor1*factor2
+        #return factor1*factor2*factor3*factor4*factor5*factor6
+    return lambda x,y: batman(x,y)
+
+def regular_polygon_distance(n):
+    angle = 2 * math.pi / n
+    
+    def distance_to_polygon(x, y):
+        radius = math.sqrt(x**2 + y**2)
+        theta = math.atan2(y, x)
+        theta = (theta + math.pi) % (2 * math.pi)
+        sector = math.floor(theta / angle)
+        next_sector = (sector + 1) % n
+        sector_angle = sector * angle
+        next_sector_angle = next_sector * angle
+
+        if sector_angle <= theta <= next_sector_angle:
+            # Inside the sector, calculate distance to the polygon edge
+            distance_to_edge = radius * math.sin(angle/2)
+            return -distance_to_edge
+        else:
+            # Outside the sector, calculate distance to the polygon vertices
+            distance_to_vertex = min(
+                math.hypot(x - math.cos(i * angle), y - math.sin(i * angle)) - 1
+                for i in range(n)
+            )
+            return distance_to_vertex
+
+    return lambda x, y: distance_to_polygon(x, y)
+
 
 
 
