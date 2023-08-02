@@ -1,1 +1,8 @@
-Put your development files here.
+Simply run main.py and you can toggle the various SDF visualizations used in my presentations. The program might take some considerable time to run since my implementation is very inefficient, for example, I do not take advantage of parallelization for marching squares. 
+
+Each example is supposed to illustrate a certain point about SDFs, for example the SDF vs implicit example illustrates the difference between a generic circle function and a circle functions that is an SDF. An example can contain an arbitrary number of distance functions. The examples used are all constructed within the main function and the parameters of all distance functions can be modified there. Further, for each example the following parameters can be specified: 
+- center_x, center_y: The distance functions in the corresponding example use (center_x, center_y) as their (0,0). By modifying these, it is possible to move the entire example. 
+- sidelength: The marching squares implementation discretizes the functions in a square with the specified sidelength, centered at (center_x, center_y). 
+- resolution: This defines with which resolution marching squares will discretize the function, so the vertices constituting the grid for marching squares will be spaced apart by this length. 
+- resolution_step: specifies how many vertices used in the evaluation grid for marching squares will be grouped as one vertice for rendering the value mesh.
+The parameters most significantly influencing runtime are sidelength and resolution. 
