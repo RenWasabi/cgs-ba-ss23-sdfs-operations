@@ -76,6 +76,18 @@
         </div>
     </section>
 
+    <section class="header" id="Signed Distance Functions">
+        <h3 class="section-heading">Signed Distance Functions</h3>
+        <div class="row">
+            <p>Für manche Anwendungen, wie zum Beispiel Spheretracing, welches wir später betrachten werden, ist es sehr nützlich, nicht nur die Information zu haben, wo unsere durch Funktion \(f\) beschriebene Figur ist, also für welche \(\vec{x}\) die Gleichung \(f(\vec{x})=0\) gilt, sondern auch für jeden Punkt \(\vec{x}\) bestimmen zu können, wie weit er von der Figur weg ist. </p>
+            <p>Die Kreisfunktion \(f(x,y)= x^2 + y^2 -1\) für den Einheitskreis, bzw. allgemeiner \(f(x,y)= x^2 + y^2 -r^2\) für einen Kreis mit Radius r, die wir im vorigen Abschnitt betrachtet haben, hat uns schon eine Art Annährung gegeben, als wir anhand des Vorzeichens des Funktionswertes entscheiden konnten, ob ein Punkt innerhalb (negatives Vorzeichen), auf (Funktionswert 0) oder außerhalb (positives Vorzeichen) des durch \(f\) beschriebenen Kreises liegt. Betrachten wir jedoch auch den konkreten Betrag des Funktionswertes, so stellen wir fest, dass dieser den quadratischen Abstand jedes Punktes zum Einheitskreis wiedergibt.</p>
+            <p>Diese "Verzerrung" der Distanz können wir beheben, indem wir die Wurzel der impliziten Funktion \(x^2+y^2=r^2\) ziehen. Wir erhalten so als neue Funktion \(d\), die den Kreis mit Radius \(r\) beschreibt, \(d(x,y)= \sqrt{x+y}-r\). Der beschriebene Kreis bleibt gleich, denn es gilt \(d^{-1}(0) = f^{-1}(0)\), außerdem bleibt die Bedeutung der Vorzeichen gleich. Der Betrag des Funktionswertes gibt nun aber für jeden Punkt \((x,y)\) die korrekte euklidische Distanz zum nächsten Punkt auf dem Kreis wieder. </p>
+            <p>Die Bedingung, dass der Betrag des Funktionswertes überall die euklidische Distanz wiedergeben soll, bedeutet, dass wenn wir einen Schritt der Länge 1 in die Richtung, die unsere Distanz am Stärksten vergrößert, machen, dieser Schritt nur genau die Länge 1 haben kann. Formal bedeutet das, dass der Betrag des Gradienten überall 1 sein muss. </p>
+            <p>Allgemein fordert man also für eine Signed Distance Function \(d\), die eine Linie/Oberfläche \(U\) beschreibt, dass: $$d(\vec{x})=min \{ \vec{x} - \vec{u} \} \ für \ \vec{u} \in U$$ also $$| \nabla dist(\vec{x})| = 1$$ </p>
+            <p>Wieso bevorzugen wir die Funktion mit der euklidischen Metrik über die mit der quadratischen Metrik, obwohl sich auch aus jener der euklidische Abstand problemlos berechnen ließe? Ein Grund dafür ist die unterschiedliche Informationsdichte bei der diskretisierten Darstellung in Computern. (Nehmen wir an, wir wollen den Funktionswert...). Ein anderer ist, dass wir uns auf eine einheitliche Metrik einigen wollen, da wir sonst bei den Boolschen Operationen, die wir später einführen werden, verzerrte Distanzinformationen für die Punkte, die nicht auf den kombinierten Figuren liegen, erhalten würden. </p>          
+        </div>
+    </section>
+
 
     <div class="docs-section" id="images">
         <h3 class="section-heading">Images</h3>
