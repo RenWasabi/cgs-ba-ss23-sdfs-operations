@@ -52,8 +52,7 @@
         </div>
     </section>
 
-        <section class="header" id="Explizite und implizite Geometriedarstellung">
-        <h2 class="title">Signed Distance Functions</h2>
+    <section class="header" id="Explizite und implizite Geometriedarstellung">
         <h3 class="section-heading">Explizite und implizite Geometriedarstellung</h3>
         <div class="row">
                     <p>In diesem Abschnitt widmen wir uns zunächst der Frage, wie wir geometrische Figuren mathematisch beschreiben können. Wir beginnen mit der intuitiven expliziten Darstellung.</p>
@@ -62,6 +61,18 @@
                     <p>Dies ist jedoch nicht die einzige Möglichkeit, einen Kreis mathematisch zu beschreiben. Aus der Schulmathematik ist weiterhin noch folgende Definition des Einheitskreises bekannt: $$\{ \ (x,y) \ |  \ x^2 + y^2 = 1 \  \}$$ Hier werden \(x\) und \(y\) nun nicht mehr explizit berechnet, sondern durch eine implizite Funktion definiert: die Punkte, die \(x^2 + y^2 = 1\) erfüllen.</p>
                     <p>Es fällt auf, dass die Diskretisierung in dieser Darstellung etwas mehr Überlegung erfordern wird, als in der expliziten, da hier bei einer Auswahl von Punkten aus der Menge nicht mehr sofort klar ist, welcher Punkt mit welchen anderen Punkten durch ein Liniensegment verbunden werden müsste. Diesem Problem werden wir uns im Abschnitt zu Diskretisierung und Rasterisierung widmen. </p>
                     <p></p>
+        </div>
+    </section>
+
+    <section class="header" id="Level Sets">
+        <h3 class="section-heading">Level Sets</h3>
+        <div class="row">
+                   <p>Die Gleichung \(x^2 + y^2 = 1\) im vorigen Abschnitt können wir zu \(x^2 + y^2 - 1 = 0\) umformen. Schreiben wir den linken Teil als Funktion \(f(x,y)= x^2 + y^2 -1\), so wird der Einheitskreis nun auch durch $$\{ \ (x,y) \ |  \ f(x,y) = 0 \  \} = f^{-1}(0) $$ beschrieben. Diese Menge heißt Level Set der Funktion \(f\) zum Level 0.</p>
+                   <p>Was für Menge erhalten wir für eine andere Wahl des Levels? $$  f^{-1}(c) = \{\ (x,y) \ |  \ f(x,y) = c \  \} = \{ \ (x,y) \ | \ x^2+y^2=1+c \}   $$  Das Level Set der Funktion \(f\) zum Level \(c\) beschreibt also alle Punkte, die auf einem Kreis mit Radius \(1+c\) mit Zentrum \((0,0)\) liegen. Für \(c<0\) sind diese Kreise innerhalb des Einheitskreises, für \(c=0\) bilden sie genau den Einheitskreis und für \(c>0\) sind die Level Set größere Kreise außerhalb es Einheitskreises. </p>
+                   <p>Wir sehen also, dass implizite Funktionen, wenn wir ihre Level Sets betrachten, noch nützliche Informationen neben der Information über die beschriebene Figur selbst (also das Level Set zum Level Set 0) enthalten können. Diese Idee werden wir uns im nächsten Abschnitt über Signed Distance Functions zunutze machen. Zunächst betrachten wir aber noch die allgemeine Definition eines Level Sets.</p>
+                   <p>Gegeben eine Funktion \(f\) mit \(f: \mathbb{R}^n \rightarrow \mathbb{R}\) und eine Konstante \(c \in \mathbb{R}\), ist das Level Set der Funktion \(f\) zum Level \(c\) definiert als: $$L_c(f) = \{ \ (x_1, ..., x_n) \ | \ f(x_1, ..., x_n) = c \ \} = f^{-1}(c)  $$ </p>
+                   <p>Geometrisch kann man sich das Level Set einer zweidimensionalen Funktion als Schnitt einer zweidimensionalen Oberfläche im dreidimensionalen Raum mit einer Ebene vorstellen. Die Oberfläche erhält man, indem man den \((x,y)\) Koordinaten ihren Funktionswert \(f(x,y)\) als Höhe zuordnet. Wenn man die Oberfläche, die aus allen Punkten \((x,y,f(x,y))\) besteht, mit einer zur \((x,y)\)-Ebene parallelen Ebene auf Höhe \(c\) schneidet, erhält man alle zulässigen \((x,y,c)\), also eine 1-dimensionale Figur (Linie) im zweidimensionalen Raum. </p>
+                   <p>Analog erhält man als Level Set einer 3-dimensionalen Funktion eine zweidimensionale Oberfläche im dreidimensionalen Raum.</p>
         </div>
     </section>
 
