@@ -96,6 +96,60 @@
             <p>Für den Schnitt fordern wir, dass nur jene Punkte, die sich in beiden Figuren befinden, sich auch innerhalb der Schnittfigur befinden. Dazu wählen wir für jeden Punkt das Maximum der beiden Funktionswerte, da dieser somit zu einem positiven äußeren Punkt wird, sobald wir eine der beiden Figuren verlassen. </p>
             <p>Das Komplement einer Figur erhalten wir, indem wir Innen und Außen, also das Vorzeichen der Signed Distance Funktion, umdrehen. </p>
             <p>Die Bildung der Differenz einer Figur von einer anderen erfordert ein wenig mehr Überlegung, als die anderen Operationen. Zunächst stellen wir fest, dass es sich wieder wie beim Schnitt um die Bildung eines Maximums handeln wird, da wir fordern, da wir vorher "innen" liegende Punkte nun ausschließen wollen. Die Differenz kann nach bekannten Regeln der Mengenoperation auch als die Vereinigung einer Figur mit dem Komplement der anderen Figur beschrieben werde, also erhalten wir die Funktion für die Differenzfigur, indem wir für jeden Punkt das Maximum aus dem Funktionswert der ersten Funktion und dem der komplementierten, also umgekehrten, zweiten Funktion wählen. Es fällt auch, dass die Differenzoperation also im Gegensatz zu den anderen Operationen auf zwei Figuren nicht symmetrisch in den Argumenten ist. </p>
+          
+                <div class="row">
+                    <div class="one-half column category" style="text-align: center;">
+                        <h5 class="docs-header">Image 1</h5>
+                        <img class="u-max-full-width" src="image/prim_circle.png">
+                            <p>Figur 1: Kreis/p>
+                    </div>
+                    <div class="one-half column category" style="text-align: center;">
+                        <h5 class="docs-header">Image 2</h5>
+                        <img class="u-max-full-width" src="images/prim_square.png">
+                            <p>Figur 2: Quadrat</p>
+                    </div>
+                </div>
+        
+                <div class="row">
+                    <div class="one-third column category" style="text-align: center;">
+                        <h5 class="docs-header">Bunny</h5>
+                        <img class="u-max-full-width" src="images/reg_union.png">
+                        <p>Vereinigung</p>
+                        </div>
+        
+                        <div class="one-third column category" style="text-align: center;">
+                        <h5 class="docs-header">Superbunny</h5>
+                        <img class="u-max-full-width" src="images/reg_intersection.png">
+                        <p>Schnitt</p>
+                        </div>
+        
+                        <div class="one-third column category" style="text-align: center;">
+                        <h5 class="docs-header">Megabunny</h5>
+                        <img class="u-max-full-width" src="images/circle_complement.png">
+                        <p>Kreis-Komplement</p>
+                        </div>
+
+                        <div class="one-third column category" style="text-align: center;">
+                        <h5 class="docs-header">Megabunny</h5>
+                        <img class="u-max-full-width" src="images/square_complement.png">
+                        <p>Quadrat-Komplement</p>
+                        </div>
+
+                        <div class="one-third column category" style="text-align: center;">
+                        <h5 class="docs-header">Megabunny</h5>
+                        <img class="u-max-full-width" src="images/reg_circle-square.png">
+                        <p>Differenz (Kreis, Quadrat)</p>
+                        </div>
+
+                        <div class="one-third column category" style="text-align: center;">
+                        <h5 class="docs-header">Megabunny</h5>
+                        <img class="u-max-full-width" src="images/reg_square-circle.png">
+                        <p>Differenz (Quadrat, Kreis)</p>
+                        </div>
+
+                    </div>
+                </div>
+            
             <p>Nun widmen wir uns der Frage, inwiefern diese Operationen Signed Distance Functions als Eingabe benötigen und ob die resultierenden Funktionen wieder Signed Distance Functions sind. Kurz ist die Antwort auf beide Fragen nein. </p>
             <p>Zur Beschreibung einer Figur arbeiten die Operationen nur mit der Information, ob ein Punkt innerhalb oder außerhalb dieser liegt, also mit dem Vorzeichen des Funktionswertes. Solange eine implizite Funktion ohne euklidische Metrik an den gleichen Punkten wie eine analoge SDF den Funktionswert 0 und positive oder negative Vorzeichen annimmt, ist die durch sie beschriebene Figur identisch zur durch die SDF beschriebenen Figur. Diese Eigenschaft bleibt auch bei Boolschen Operationen unterhalten. Dies wird sich bei den geglätteten Boolschen Operationen, auf die wir später eingehen, ändern, da diese neben dem Vorzeichen des Funktionswertes auch die tatsächliche Höhe desselben benötigen werden. </p>
             <p>Die aus Boolschen Operationen auf zwei Signed Distance Functions resultierende Funktion ist in der Regel keine Signed Distance Function mehr. Wir betrachten dafür ein exemplarisches Beispiel, die Vereinigung von zwei Kreisen. </p>
