@@ -60,6 +60,16 @@
                     <p>Wir berechnen \(x\) und \(y\) also explizit durch \(x = cos \ \varphi\) und \(y = sin \ \varphi\). Möchten wir diese Darstellung diskretisieren, so wählen wir eine geeignete Menge an Punkten aus dieser Menge aus und verbinden diese durch Liniensegmente. Die Reihenfolge, in der wir sie verbinden, entspricht der Höhe von \(\varphi\), bei Beachtung des möglichen Überlaufs. Die Entsprechung dieses Vorgehen im Dreidimensionalen ist, eine Menge von Punkten auf der Einheitskugel auszuwählen und diese durch zu Dreiecken zu verbinden, um eine Meshdarstellung der Kugel zu erhalten. </p>
                     <p>Dies ist jedoch nicht die einzige Möglichkeit, einen Kreis mathematisch zu beschreiben. Aus der Schulmathematik ist weiterhin noch folgende Definition des Einheitskreises bekannt: $$\{ \ (x,y) \ |  \ x^2 + y^2 = 1 \  \}$$ Hier werden \(x\) und \(y\) nun nicht mehr explizit berechnet, sondern durch eine implizite Funktion definiert: die Punkte, die \(x^2 + y^2 = 1\) erfüllen.</p>
                     <p>Es fällt auf, dass die Diskretisierung in dieser Darstellung etwas mehr Überlegung erfordern wird, als in der expliziten, da hier bei einer Auswahl von Punkten aus der Menge nicht mehr sofort klar ist, welcher Punkt mit welchen anderen Punkten durch ein Liniensegment verbunden werden müsste. Diesem Problem werden wir uns im Abschnitt zu Diskretisierung und Rasterisierung widmen. </p>
+                    <div class="row">
+                        <div class="one-half column category" style="text-align: center;">
+                            <img class="u-max-full-width" src="images/explicit.png">
+                                <p>explizite Darstellung</p>
+                        </div>
+                        <div class="one-half column category" style="text-align: center;">
+                            <img class="u-max-full-width" src="images/implicit.png">
+                                <p>implizite Darstellung</p>
+                        </div>
+                    </div>
                     <p></p>
         </div>
     </section>
@@ -82,6 +92,18 @@
             <p>Für manche Anwendungen, wie zum Beispiel Spheretracing, welches wir später betrachten werden, ist es sehr nützlich, nicht nur die Information zu haben, wo unsere durch Funktion \(f\) beschriebene Figur ist, also für welche \(\vec{x}\) die Gleichung \(f(\vec{x})=0\) gilt, sondern auch für jeden Punkt \(\vec{x}\) bestimmen zu können, wie weit er von der Figur weg ist. </p>
             <p>Die Kreisfunktion \(f(x,y)= x^2 + y^2 -1\) für den Einheitskreis, bzw. allgemeiner \(f(x,y)= x^2 + y^2 -r^2\) für einen Kreis mit Radius r, die wir im vorigen Abschnitt betrachtet haben, hat uns schon eine Art Annährung gegeben, als wir anhand des Vorzeichens des Funktionswertes entscheiden konnten, ob ein Punkt innerhalb (negatives Vorzeichen), auf (Funktionswert 0) oder außerhalb (positives Vorzeichen) des durch \(f\) beschriebenen Kreises liegt. Betrachten wir jedoch auch den konkreten Betrag des Funktionswertes, so stellen wir fest, dass dieser den quadratischen Abstand jedes Punktes zum Einheitskreis wiedergibt.</p>
             <p>Diese "Verzerrung" der Distanz können wir beheben, indem wir die Wurzel der impliziten Funktion \(x^2+y^2=r^2\) ziehen. Wir erhalten so als neue Funktion \(d\), die den Kreis mit Radius \(r\) beschreibt, \(d(x,y)= \sqrt{x^2+y²}-r\). Der beschriebene Kreis bleibt gleich, denn es gilt \(d^{-1}(0) = f^{-1}(0)\), außerdem bleibt die Bedeutung der Vorzeichen gleich. Der Betrag des Funktionswertes gibt nun aber für jeden Punkt \((x,y)\) die korrekte euklidische Distanz zum nächsten Punkt auf dem Kreis wieder. </p>
+            <div class="row">
+                <div class="one-half column category" style="text-align: center;">
+                    <h5 class="docs-header">quadratische Metrik</h5>
+                    <img class="u-max-full-width" src="images/quad_circle.png">
+                        <p>\(f(x,y)= x^2 + y^2 -r^2\)</p>
+                </div>
+                <div class="one-half column category" style="text-align: center;">
+                    <h5 class="docs-header">euklidische Metrik</h5>
+                    <img class="u-max-full-width" src="images/euclid_circle.png">
+                        <p>\(d(x,y)= \sqrt{x^2+y²}-r\)</p>
+                </div>
+            </div>
             <p>Die Bedingung, dass der Betrag des Funktionswertes überall die euklidische Distanz wiedergeben soll, bedeutet, dass wenn wir einen Schritt der Länge 1 in die Richtung, die unsere Distanz am Stärksten vergrößert, machen, dieser Schritt nur genau die Länge 1 haben kann. Formal bedeutet das, dass der Betrag des Gradienten überall 1 sein muss. </p>
             <p>Allgemein fordert man also für eine Signed Distance Function \(d\), die eine Linie/Oberfläche \(U\) beschreibt, dass: $$d(\vec{x})=min \{ \vec{x} - \vec{u} \} \ für \ \vec{u} \in U$$ also $$| \nabla dist(\vec{x})| = 1$$ </p>
             <p>Wieso bevorzugen wir die Funktion mit der euklidischen Metrik über die mit der quadratischen Metrik, obwohl sich auch aus jener der euklidische Abstand problemlos berechnen ließe? Ein Grund dafür ist die unterschiedliche Informationsdichte bei der diskretisierten Darstellung in Computern. (Nehmen wir an, wir wollen den Funktionswert...). Ein anderer ist, dass wir uns auf eine einheitliche Metrik einigen wollen, da wir sonst bei den Boolschen Operationen, die wir später einführen werden, verzerrte Distanzinformationen für die Punkte, die nicht auf den kombinierten Figuren liegen, erhalten würden. </p>          
@@ -144,7 +166,7 @@
                         <div class="one-third column category" style="text-align: center;">
                         <h5 class="docs-header">Differenz (Quadrat, Kreis)</h5>
                         <img class="u-max-full-width" src="images/reg_square-circle.png">
-                        <p>\( \varphi_{1-2} = max \{ - \varphi_1 , \varphi_2\} \)</p>
+                        <p>\( \varphi_{2-1} = max \{ - \varphi_1 , \varphi_2\} \)</p>
                         </div>
 
                     </div>
@@ -154,6 +176,7 @@
             <p>Zur Beschreibung einer Figur arbeiten die Operationen nur mit der Information, ob ein Punkt innerhalb oder außerhalb dieser liegt, also mit dem Vorzeichen des Funktionswertes. Solange eine implizite Funktion ohne euklidische Metrik an den gleichen Punkten wie eine analoge SDF den Funktionswert 0 und positive oder negative Vorzeichen annimmt, ist die durch sie beschriebene Figur identisch zur durch die SDF beschriebenen Figur. Diese Eigenschaft bleibt auch bei Boolschen Operationen unterhalten. Dies wird sich bei den geglätteten Boolschen Operationen, auf die wir später eingehen, ändern, da diese neben dem Vorzeichen des Funktionswertes auch die tatsächliche Höhe desselben benötigen werden. </p>
             <p>Die aus Boolschen Operationen auf zwei Signed Distance Functions resultierende Funktion ist in der Regel keine Signed Distance Function mehr. Wir betrachten dafür ein exemplarisches Beispiel, die Vereinigung von zwei Kreisen. </p>
             <p>Sei \(d_1(x,y)= \sqrt{x²+y¹-1}\) Kreis 1, der Einheitskreis, und \(d_2(x,y)= \sqrt{(x-1)²+y¹-1}\) Kreis 2, ein Kreis mit Radius 1 und Zentrum \((1,0)\). Es handelt sich bei \(d_1\) und \(d_2\) um Signed Distance Functions. Die Vereinigung der beiden Kreise ist gegeben durch \(d_\cup(x,y)=min \{ d_1(x,y), d_2(x,y)\}\). Nun betrachten wir den Punkt \(p=(0.5, 0.5)\). Es gilt \(d_1(0.5, 0.5)= \sqrt{(0.5)²+(0.5)¹-1}= \sqrt{0.5}-1 \approx -0.293\) und \(d_2(0.5, 0.5)= \sqrt{(0.5-1)²+(0.5)¹-1}= \sqrt{0.5}-1 \approx -0.293\). Wir können leicht einsehen, dass der nächste Punkt \(q\) auf der Vereinigungsfigur sich an \(x=(0,5)\) und \(y>0\) befindet, wo Kreis 1 in Kreis 2 übergeht. Da dieser Punkt sich auf dem Einheitskreis befindet, wissen wir aus der x-Koordinate, dass \(y=\sqrt{3}/2\). Als tatsächliche vorzeichenbehaftete Distanz (\(p\) ist innerhalb Figur, also negatives Vorzeichen) unseres Punktes \(p\) zum nächsten Figurenpunkt \(q\) erhalten wir also: $$-|p-q|=|(0.5, 0.5)^T-(0.5, \sqrt{3}/2)^T|=-|0.5-\sqrt{3}/2| \approx -0.366 \neq -0.293$$</p>
+            <img class="u-max-full-width" src="images/union_no_sdf.jpg">
             <p>Es ist leicht zu erkennen, warum die Vereinigungsfunktion uns nur eine untere Abschätzung der tatsächlichen Distanz liefert. Die beiden Kreisabschnitte von Kreis 1 und Kreis 2, auf denen die jeweils nächsten Punkte zu \(p\) lagen, deren Distanz durch \(d_1\) und \(d_2\) gegeben wurden, liegen innerhalb der Vereinigungsfigur und gehören somit beide nicht mehr zum 0-Level Set derselben. Das Maximum aus zwei Distanzfunktionen muss immer die Entfernung zu einem Punkt sein, der sich bereits auf dem 0-Level mindestens einer der beiden Funktionen befand. Durch die Vereinigung werden jedoch möglicherweise Punkte, die sich vorher in den 0-Level Sets befanden, aus dem neuen 0-Level Set entfernt und in das Innere der neuen Figur verlagert. Die Distanz eines inneren Punktes \(p\) zum neuen 0-Level Set bleibt also entweder gleich, wenn nicht beide entsprechenden ursprünglichen nächsten Punkte ausgelöscht werden, oder vergrößert sich sonst. Daher bietet die Vereinigungsfunktion nur eine untere Abschätzung der Distanz und es handelt sich um keine strikte Signed Distance Function mehr. </p>
             <p>Vergleichbare Effekte treten bei den anderen Operationen auf.</p>          
         </div>
