@@ -1,4 +1,4 @@
-<!doctype html><html class="no-js"><head><meta charset="utf-8"><title>Project Title</title><meta name="description" content=""><meta name="viewport" content="width=device-width">
+<!doctype html><html class="no-js"><head><meta charset="utf-8"><title>Signed Distance Functions</title><meta name="description" content=""><meta name="viewport" content="width=device-width">
 <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 <link href="http://fonts.googleapis.com/css?family=Raleway:300,400,600" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="style.css">
@@ -21,16 +21,19 @@
                     <a class="navbar-link" href="#intro">Intro</a>
                 </li>
                 <li class="navbar-item">
-                    <a class="navbar-link" href="#images">Images</a>
+                    <a class="navbar-link" href="#Explizite und implizite Geometriedarstellung">explizit/implizit</a>
                 </li>
                 <li class="navbar-item">
-                    <a class="navbar-link" href="#tables">Tables</a>
+                    <a class="navbar-link" href="#Level Sets">Level Sets</a>
                 </li>
                 <li class="navbar-item">
-                    <a class="navbar-link" href="#code">Code</a>
+                    <a class="navbar-link" href="#Signed Distance Functions">SDF</a>
                 </li>
                 <li class="navbar-item">
-                    <a class="navbar-link" href="#math">Math</a>
+                    <a class="navbar-link" href="#Boolsche Operationen">Boolsche Operationen</a>
+                </li>
+                <li class="navbar-item">
+                    <a class="navbar-link" href="#Glättung">Glättung</a>
                 </li>
                 <li class="navbar-item">
                     <a class="navbar-link" href="#references">References</a>
@@ -41,7 +44,7 @@
 
     <section class="header" id="intro">
         <h2 class="title">Signed Distance Functions</h2>
-        <h6>Project by Carolina Reiß (<a href="mailto:albert.einstein@mailbox.tu-berlin.de">albert.einstein@mailbox.tu-berlin.de</a>)
+        <h6>Project by Carolina Reiß (<a href="mailto:reiss@campus.tu-berlin.de">reiss@campus.tu-berlin.de</a>)
         </h6>
 
         <div class="row">
@@ -177,7 +180,7 @@
             <p>Nun widmen wir uns der Frage, inwiefern diese Operationen Signed Distance Functions als Eingabe benötigen und ob die resultierenden Funktionen wieder Signed Distance Functions sind. Kurz ist die Antwort auf beide Fragen nein. </p>
             <p>Zur Beschreibung einer Figur arbeiten die Operationen nur mit der Information, ob ein Punkt innerhalb oder außerhalb dieser liegt, also mit dem Vorzeichen des Funktionswertes. Solange eine implizite Funktion ohne euklidische Metrik an den gleichen Punkten wie eine analoge SDF den Funktionswert 0 und positive oder negative Vorzeichen annimmt, ist die durch sie beschriebene Figur identisch zur durch die SDF beschriebenen Figur. Diese Eigenschaft bleibt auch bei Boolschen Operationen unterhalten. Dies wird sich bei den geglätteten Boolschen Operationen, auf die wir später eingehen, ändern, da diese neben dem Vorzeichen des Funktionswertes auch die tatsächliche Höhe desselben benötigen werden. </p>
             <p>Die aus Boolschen Operationen auf zwei Signed Distance Functions resultierende Funktion ist in der Regel keine Signed Distance Function mehr. Wir betrachten dafür ein exemplarisches Beispiel, die Vereinigung von zwei Kreisen. </p>
-            <p>Sei \(d_1(x,y)= \sqrt{x²+y¹-1}\) Kreis 1, der Einheitskreis, und \(d_2(x,y)= \sqrt{(x-1)²+y¹-1}\) Kreis 2, ein Kreis mit Radius 1 und Zentrum \((1,0)\). Es handelt sich bei \(d_1\) und \(d_2\) um Signed Distance Functions. Die Vereinigung der beiden Kreise ist gegeben durch \(d_\cup(x,y)=min \{ d_1(x,y), d_2(x,y)\}\). Nun betrachten wir den Punkt \(p=(0.5, 0.5)\). Es gilt \(d_1(0.5, 0.5)= \sqrt{(0.5)²+(0.5)¹-1}= \sqrt{0.5}-1 \approx -0.293\) und \(d_2(0.5, 0.5)= \sqrt{(0.5-1)²+(0.5)¹-1}= \sqrt{0.5}-1 \approx -0.293\). Wir können leicht einsehen, dass der nächste Punkt \(q\) auf der Vereinigungsfigur sich an \(x=(0,5)\) und \(y>0\) befindet, wo Kreis 1 in Kreis 2 übergeht. Da dieser Punkt sich auf dem Einheitskreis befindet, wissen wir aus der x-Koordinate, dass \(y=\sqrt{3}/2\). Als tatsächliche vorzeichenbehaftete Distanz (\(p\) ist innerhalb Figur, also negatives Vorzeichen) unseres Punktes \(p\) zum nächsten Figurenpunkt \(q\) erhalten wir also: $$-|p-q|=|(0.5, 0.5)^T-(0.5, \sqrt{3}/2)^T|=-|0.5-\sqrt{3}/2| \approx -0.366 \neq -0.293$$</p>
+            <p>Sei \(d_1(x,y)= \sqrt{x²+y²-1}\) Kreis 1, der Einheitskreis, und \(d_2(x,y)= \sqrt{(x-1)²+y²-1}\) Kreis 2, ein Kreis mit Radius 1 und Zentrum \((1,0)\). Es handelt sich bei \(d_1\) und \(d_2\) um Signed Distance Functions. Die Vereinigung der beiden Kreise ist gegeben durch \(d_\cup(x,y)=min \{ d_1(x,y), d_2(x,y)\}\). Nun betrachten wir den Punkt \(p=(0.5, 0.5)\). Es gilt \(d_1(0.5, 0.5)= \sqrt{(0.5)²+(0.5)²-1}= \sqrt{0.5}-1 \approx -0.293\) und \(d_2(0.5, 0.5)= \sqrt{(0.5-1)²+(0.5)²-1}= \sqrt{0.5}-1 \approx -0.293\). Wir können leicht einsehen, dass der nächste Punkt \(q\) auf der Vereinigungsfigur sich an \(x=(0,5)\) und \(y>0\) befindet, wo Kreis 1 in Kreis 2 übergeht. Da dieser Punkt sich auf dem Einheitskreis befindet, wissen wir aus der x-Koordinate, dass \(y=\sqrt{3}/2\). Als tatsächliche vorzeichenbehaftete Distanz (\(p\) ist innerhalb Figur, also negatives Vorzeichen) unseres Punktes \(p\) zum nächsten Figurenpunkt \(q\) erhalten wir also: $$-|p-q|=|(0.5, 0.5)^T-(0.5, \sqrt{3}/2)^T|=-|0.5-\sqrt{3}/2| \approx -0.366 \neq -0.293$$</p>
             <img class="u-max-full-width" src="images/union_no_sdf.jpg">
             <p>Es ist leicht zu erkennen, warum die Vereinigungsfunktion uns nur eine untere Abschätzung der tatsächlichen Distanz liefert. Die beiden Kreisabschnitte von Kreis 1 und Kreis 2, auf denen die jeweils nächsten Punkte zu \(p\) lagen, deren Distanz durch \(d_1\) und \(d_2\) gegeben wurden, liegen innerhalb der Vereinigungsfigur und gehören somit beide nicht mehr zum 0-Level Set derselben. Das Maximum aus zwei Distanzfunktionen muss immer die Entfernung zu einem Punkt sein, der sich bereits auf dem 0-Level mindestens einer der beiden Funktionen befand. Durch die Vereinigung werden jedoch möglicherweise Punkte, die sich vorher in den 0-Level Sets befanden, aus dem neuen 0-Level Set entfernt und in das Innere der neuen Figur verlagert. Die Distanz eines inneren Punktes \(p\) zum neuen 0-Level Set bleibt also entweder gleich, wenn nicht beide entsprechenden ursprünglichen nächsten Punkte ausgelöscht werden, oder vergrößert sich sonst. Daher bietet die Vereinigungsfunktion nur eine untere Abschätzung der Distanz und es handelt sich um keine strikte Signed Distance Function mehr. </p>
             <p>Vergleichbare Effekte treten bei den anderen Operationen auf.</p>          
@@ -186,10 +189,10 @@
 
 
 
-    <section class="header" id="Signed Distance Functions">
-        <h3 class="section-heading">Signed Distance Functions</h3>
+    <section class="header" id="Glättung">
+        <h3 class="section-heading">Glättung</h3>
         <div class="row">
-            <p></p>
+            <p>Man kann zwischen zwei grundlegenden Arten der Glättung von Signed Distance Functions unterscheiden. Die eine ist Glättung durch "Skalierung" des ursprünglichen 0-Level Sets nach außen, Wahl eines höheren Levels beziehungsweise Substraktion dieses Levels von der ursprünglichen Distanzfunktion. Bei der anderen glättet man die Schnittstellen bzw. Übergänge von zwei Figuren, auf denen eine Boolsche Operation ausgeübt wird, indem man an die Funktionswerte dort interpoliert. </p>
             <p></p>
             <p></p>
             <p></p>
@@ -204,199 +207,6 @@
     </section>
 
 
-    <div class="docs-section" id="images">
-        <h3 class="section-heading">Images</h3>
-        <p class="section-description">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
-
-        <h5>Images in columns</h5>
-
-        <div class="row">
-            <div class="one-half column category" style="text-align: center;">
-                <h5 class="docs-header">Image 1</h5>
-                <img class="u-max-full-width" src="images/empty.jpg">
-                    <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
-            </div>
-            <div class="one-half column category" style="text-align: center;">
-                <h5 class="docs-header">Image 2</h5>
-                <img class="u-max-full-width" src="images/empty.jpg">
-                    <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="one-third column category" style="text-align: center;">
-                <h5 class="docs-header">Bunny</h5>
-                <img class="u-max-full-width" src="images/empty.jpg">
-                <p>An empty image.</p>
-                </div>
-
-                <div class="one-third column category" style="text-align: center;">
-                <h5 class="docs-header">Superbunny</h5>
-                <img class="u-max-full-width" src="images/empty.jpg">
-                <p>An second empty image.</p>
-                </div>
-
-                <div class="one-third column category" style="text-align: center;">
-                <h5 class="docs-header">Megabunny</h5>
-                <img class="u-max-full-width" src="images/empty.jpg">
-                <p>A super empty image.</p>
-            </div>
-        </div>
-
-        <h5>Text and Images</h5>
-
-        <div class="u-pull-right" style="text-align: center; width:300px; margin-left:20px">
-            <h5 id="figure2" class="docs-header">Figure 2</h5>
-            <img class="u-max-full-width" src="images/empty.jpg">
-            <p>I shall not write fancy figure descriptions. I shall not write fancy image descriptions. I shall not write fancy graph descriptions.</p>
-        </div>
-
-        <p>
-            This text can float around <a href="#figure2">figure 2</a>.
-            It can also contain linebreaks and new paragraphs.<br>
-            This is how a linebreak looks.
-        </p>
-        <p>
-           Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-        </p>
-
-        <p>
-           Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diamneses voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata ita sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diamneses voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata ita sanctus est Lorem ipsum dolor sit amet.
-        </p>
-
-        <h5>Moving Images aka Videos</h5>
-
-        <div class="row">
-            <div class="one-half column category" style="text-align: center;">
-                <h5 class="docs-header">Voronoi Generation</h5>
-                <video class="u-max-full-width" controls>
-                    <source src="videos/voronoi.ogg" type="video/ogg">
-                    Your browser does not support the video tag.
-                </video>
-                <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diamneses voluptua.</p>
-            </div>
-            <div class="one-half column category" style="text-align: center;">
-                <h5 class="docs-header">Voronoi Generation</h5>
-                <video class="u-max-full-width" controls>
-                    <source src="videos/voronoi.ogg" type="video/ogg">
-                    Your browser does not support the video tag.
-                </video>
-                <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diamneses voluptua.</p>
-            </div>
-        </div>
-
-    </div>
-
-
-    <div class="docs-section" id="tables">
-        <h3 class="section-heading">Tables</h3>
-        <p class="section-description">At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata ita sanctus est Lorem ipsum dolor sit amet.</p>
-        <div class="row">
-            <div class="one-half column category" style="text-align: center;">
-                <h5 class="docs-header">Table 1</h5>
-                <table class="u-full-width">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Value</th>
-                            <th>Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Laplace</td>
-                            <td>26</td>
-                            <td>---</td>
-                        </tr>
-                        <tr>
-                            <td>Beltrami</td>
-                            <td>42</td>
-                            <td>n/a</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="one-half column category" style="text-align: center;">
-                <h5 class="docs-header">Table 2</h5>
-                <table class="u-full-width">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Value</th>
-                            <th>Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Laplace</td>
-                            <td>26</td>
-                            <td>---</td>
-                        </tr>
-                        <tr>
-                            <td>Beltrami</td>
-                            <td>42</td>
-                            <td>n/a</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="one-half column category">
-                <h5 class="docs-header">Unordered Lists</h5>
-                <ul>
-                    <li>Unordered lists have basic styles</li>
-                    <li>
-                      They use the circle list style
-                      <ul>
-                        <li>Nested lists styled to feel right</li>
-                        <li>Can nest either type of list into the other</li>
-                      </ul>
-                    </li>
-                </ul>
-            </div>
-            <div class="one-half column category">
-                <h5 class="docs-header">Ordered Lists</h5>
-                <ol>
-                    <li>Ordered lists also have basic styles</li>
-                    <li>
-                      They use the decimal list style
-                      <ul>
-                        <li>Ordered and unordered can be nested</li>
-                      </ul>
-                    </li>
-                    <li>Last list item just for the fun</li>
-                </ol>
-            </div>
-        </div>
-    </div>
-
-    <div class="docs-section" id="code">
-        <h3 class="section-heading">Code</h3>
-        <p class="section-description">At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata ita sanctus est Lorem ipsum dolor sit amet.</p>
-        <pre>
-            <code>def load_image(nr, flat=True):
-    img = io.imread(get_path(nr), as_grey=True)
-    if flat:
-        # print(img.shape)
-        img = img.reshape(-1)
-        # print(np.amin(img), np.amax(img))
-    print("Loaded img " + str(nr))
-    return img
-</code>
-        </pre>
-        <p>
-            Inline code snippets <code>are also possible</code> as this beautiful <code>super code i++; 0x34</code> shows.
-        </p>
-    </div>
-
-    <div class="docs-section" id="math">
-        <h3 class="section-heading">Math</h3>
-        <p class="section-description">Mathematic formulations such as \(f(x) = 3 \cdot x + \epsilon \cdot y\) are powered by MathJax <a href="#2">[2]</a>. They can be written (amongst other possibilities) in \(\LaTeX\) notation. Besides in-line mathematics, displayed equations are possible:
-\[\nabla \times H = J_c + \frac{\partial D}{\partial t}\]
-        </p>
-    </div>
 
     <div class="docs-section" id="references">
         <h3 class="section-heading">References</h3>
